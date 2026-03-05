@@ -46,10 +46,30 @@ const gallery = [
 export default function DesktopGallery() {
   const containerRef = useRef(null);
   const imgsRef = useRef([]);
+  // const [loaded, setLoaded] = useState(false);
   const [lastClicked, setLastClicked] = useState(null);
   // const [lastClickedTitle, setLastClickedTitle] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
+  // const loadImage = (src) => {
+  //   return new Promise((resolve, reject) => {
+  //     const img = new window.Image();
+  //     img.src = src;
+  //     img.onload = () => resolve(src);
+  //     img.onerror = () => reject(src);
+  //   });
+  // };
+  // const preloadImages = async (images) => {
+  //   const promises = images.map((src) => loadImage(src));
+  //   await Promise.all(promises);
+  // };
+  // useEffect(() => {
+  //   const init = async () => {
+  //     await preloadImages(gallery);
+  //     setLoaded(true);
+  //   };
 
+  //   init();
+  // }, []);
   const randomNumber = () => {
     let n = Math.floor(Math.random() * 80);
     while (n < 7) {
@@ -85,6 +105,7 @@ export default function DesktopGallery() {
 
   useGSAP(
     () => {
+      //if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
       gsap.set(img, { x: 0, y: 0 });
 
@@ -110,7 +131,10 @@ export default function DesktopGallery() {
         },
       });
     },
-    { scope: containerRef },
+    {
+      scope: containerRef,
+      //dependencies: [loaded]
+    },
   );
   return (
     <div
@@ -124,46 +148,49 @@ export default function DesktopGallery() {
         onClick={() => {
           shuffle();
         }}
-        className="text-white  cursor-pointer -translate-x-1/2 -translate-Y-1/2 absolute bottom-[5vh] left-[50%] z-[9999]"
+        className="text-white  cursor-pointer -translate-x-1/2 -translate-Y-1/2 absolute bottom-[5vh] left-[50%] z-[99999999]"
       >
         Lollo Gallery
       </button>
-
-      {gallery.map((e, i) => {
-        return (
-          <div
-            key={i}
-            className=" imgs absolute w-1/12  -translate-x-1/2 -translate-Y-1/2 "
-            onClick={(e) => {
-              setLastClicked(e.currentTarget);
-              e.stopPropagation();
-              gsap.to(e.currentTarget, {
-                scale: 3,
-                x: window.innerWidth / 2,
-                y: window.innerHeight / 2.5,
-              });
-              gsap.to(lastClicked, {
-                x: () => `${randomNumber()}vw`,
-                y: () => `${randomNumber()}vh`,
-              });
-              // const title = e.currentTarget.querySelector("h1");
-              const description = e.currentTarget.querySelector("div");
-              // setLastClickedTitle(title);
-              setLastClickedDescription(description);
-              // title.classList.remove("hidden");
-              description.classList.remove("hidden");
-              // lastClickedTitle.classList.add("hidden");
-              lastClickedDescription.classList.add("hidden");
-            }}
-          >
-            {/* <h1 className="text-yellow-400  hidden absolute top-[35%] left-[-50%]">TITOLO</h1> */}
-            <Image src={e} alt="foto" width={800} height={1200} className="relative" />
-            <div className=" hidden ">
-              <p className="text-yellow-400 text-[0.4vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
+      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
+      {
+        //loaded &&
+        gallery.map((e, i) => {
+          return (
+            <div
+              key={i}
+              className=" imgs absolute w-1/12  -translate-x-1/2 -translate-Y-1/2 "
+              onClick={(e) => {
+                setLastClicked(e.currentTarget);
+                e.stopPropagation();
+                gsap.to(e.currentTarget, {
+                  scale: 3,
+                  x: window.innerWidth / 2,
+                  y: window.innerHeight / 2.5,
+                });
+                gsap.to(lastClicked, {
+                  x: () => `${randomNumber()}vw`,
+                  y: () => `${randomNumber()}vh`,
+                });
+                // const title = e.currentTarget.querySelector("h1");
+                const description = e.currentTarget.querySelector("div");
+                // setLastClickedTitle(title);
+                setLastClickedDescription(description);
+                // title.classList.remove("hidden");
+                description.classList.remove("hidden");
+                // lastClickedTitle.classList.add("hidden");
+                lastClickedDescription.classList.add("hidden");
+              }}
+            >
+              {/* <h1 className="text-yellow-400  hidden absolute top-[35%] left-[-50%]">TITOLO</h1> */}
+              <Image src={e} alt="foto" width={800} height={1200} className="relative" />
+              <div className=" hidden ">
+                <p className="text-yellow-400 text-[0.4vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      }
     </div>
   );
 }
