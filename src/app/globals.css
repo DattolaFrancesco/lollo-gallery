@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+.gridCustom {
+  position: relative;
+  display: block;
+  transform: none !important;
+  break-inside: avoid;
+  width: 100%;
+  transition: 2s all;
+  cursor: default !important;
+}
+.shuffle {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}

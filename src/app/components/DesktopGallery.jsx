@@ -10,15 +10,15 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 
 const gallery = [
   "/gallery/1.jpg",
-  "/gallery/2.jpg",
+  "/gallery/2v.jpg",
   "/gallery/3.jpg",
   "/gallery/4.jpg",
   "/gallery/5.jpg",
   "/gallery/6.jpg",
-  "/gallery/7.jpg",
+  "/gallery/7v.jpg",
   "/gallery/8.jpg",
   "/gallery/9.jpg",
-  "/gallery/10.jpg",
+  "/gallery/10v.jpg",
   "/gallery/11.jpg",
   "/gallery/12.jpg",
   "/gallery/13.jpg",
@@ -32,50 +32,77 @@ const gallery = [
   "/gallery/21.jpg",
   "/gallery/22.jpg",
   "/gallery/23.jpg",
-  "/gallery/24.jpg",
+  "/gallery/24v.jpg",
   "/gallery/25.jpg",
   "/gallery/26.jpg",
-  "/gallery/27.jpg",
-  "/gallery/28.jpg",
+  "/gallery/27v.jpg",
+  "/gallery/28v.jpg",
   "/gallery/29.jpg",
   "/gallery/30.jpg",
   "/gallery/31.jpg",
   "/gallery/32.jpg",
+  "/gallery/33v.webp",
+  "/gallery/34v.webp",
+  "/gallery/35v.webp",
+  "/gallery/36.webp",
+  "/gallery/37.webp",
+  "/gallery/38.webp",
+  "/gallery/39.webp",
+  "/gallery/40.webp",
+  "/gallery/41.webp",
+  "/gallery/42.webp",
+  "/gallery/43.webp",
+  "/gallery/44.webp",
+  "/gallery/45.webp",
+  "/gallery/46.webp",
+  "/gallery/47.webp",
+  "/gallery/48.webp",
+  "/gallery/49.webp",
+  "/gallery/50.jpg",
+  "/gallery/51.jpg",
+  "/gallery/52.jpg",
+  "/gallery/53.jpg",
+  "/gallery/54.jpg",
 ];
 
 export default function DesktopGallery() {
   const containerRef = useRef(null);
-  const imgsRef = useRef([]);
-  // const [loaded, setLoaded] = useState(false);
+  const btnShuffleRef = useRef(null);
+  const [btnGrid, setBtnGrid] = useState("Grid");
+  const [loaded, setLoaded] = useState(false);
   const [lastClicked, setLastClicked] = useState(null);
-  // const [lastClickedTitle, setLastClickedTitle] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
-  // const loadImage = (src) => {
-  //   return new Promise((resolve, reject) => {
-  //     const img = new window.Image();
-  //     img.src = src;
-  //     img.onload = () => resolve(src);
-  //     img.onerror = () => reject(src);
-  //   });
-  // };
-  // const preloadImages = async (images) => {
-  //   const promises = images.map((src) => loadImage(src));
-  //   await Promise.all(promises);
-  // };
-  // useEffect(() => {
-  //   const init = async () => {
-  //     await preloadImages(gallery);
-  //     setLoaded(true);
-  //   };
+  const loadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.src = src;
+      img.onload = () => {
+        resolve(src);
+        console.log("img caricata");
+      };
+      img.onerror = () => reject(src);
+    });
+  };
+  const preloadImages = async (images) => {
+    const promises = images.map((src) => loadImage(src));
+    await Promise.all(promises);
+  };
+  useEffect(() => {
+    const init = async () => {
+      await preloadImages(gallery);
+      setLoaded(true);
+    };
 
-  //   init();
-  // }, []);
+    init();
+  }, []);
   const randomNumber = () => {
-    let n = Math.floor(Math.random() * 80);
+    let n = Math.floor(Math.random() * 37);
+    let direction = Math.random();
     while (n < 7) {
-      n = Math.floor(Math.random() * 80);
+      n = Math.floor(Math.random() * 37);
     }
-    return n;
+    if (direction > 0.5) return n;
+    else return -n;
   };
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
@@ -87,6 +114,21 @@ export default function DesktopGallery() {
       });
     });
   };
+  const Grid = () => {
+    const images = document.querySelectorAll(".imgs");
+    const container = containerRef.current;
+    const btnShuffle = btnShuffleRef.current;
+    const Body = document.querySelector("body");
+    setBtnGrid(!btnGrid);
+    Body.classList.toggle("overflow-x-hidden");
+    btnShuffle.classList.toggle("hidden");
+    container.classList.toggle("shuffle");
+    container.classList.toggle("columns-8");
+    container.classList.toggle("gap-0");
+    images.forEach((e) => {
+      e.classList.toggle("gridCustom");
+    });
+  };
   const clearScale = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
@@ -96,24 +138,21 @@ export default function DesktopGallery() {
       x: () => `${randomNumber()}vw`,
       y: () => `${randomNumber()}vh`,
     });
-    // lastClickedTitle.classList.add("hidden");
     lastClickedDescription.classList.add("hidden");
     setLastClicked(null);
-    // setLastClickedTitle(null);
     setLastClickedDescription(null);
   };
-
   useGSAP(
     () => {
-      //if (!loaded) return;
+      if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
-      gsap.set(img, { x: 0, y: 0 });
+      gsap.set(img, { x: 0, y: 0, opacity: 1 });
 
       gsap.to(img, {
         duration: 1.2,
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
-        stagger: 0.1,
+        stagger: 0.09,
         ease: "power1.out",
       });
 
@@ -133,64 +172,77 @@ export default function DesktopGallery() {
     },
     {
       scope: containerRef,
-      //dependencies: [loaded]
+      dependencies: [loaded],
     },
   );
   return (
     <div
       ref={containerRef}
-      className="w-screen h-screen bg-gray-900 relative overflow-hidden "
+      className="w-screen min-h-screen bg-gray-900 relative  shuffle "
       onClick={() => {
         clearScale();
       }}
     >
       <button
-        onClick={() => {
+        ref={btnShuffleRef}
+        onClick={(e) => {
+          e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer -translate-x-1/2 -translate-Y-1/2 absolute bottom-[5vh] left-[50%] z-[99999999]"
+        className="text-white  cursor-pointer fixed bottom-[10vh] z-99999999"
       >
         Lollo Gallery
       </button>
-      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
-      {
-        //loaded &&
-        gallery.map((e, i) => {
-          return (
-            <div
-              key={i}
-              className=" imgs absolute w-1/12  -translate-x-1/2 -translate-Y-1/2 "
-              onClick={(e) => {
-                setLastClicked(e.currentTarget);
-                e.stopPropagation();
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          Grid();
+        }}
+        className="text-white  cursor-pointer fixed top-[10vh] z-99999999"
+      >
+        {btnGrid ? "Grid" : "Shuffle"}
+      </button>
+      {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
+      {gallery.map((e, i) => {
+        return (
+          <div
+            key={i}
+            className=" imgs absolute w-[12vw] opacity-0"
+            onClick={(e) => {
+              setLastClicked(e.currentTarget);
+              e.stopPropagation();
+              const vertical = e.currentTarget.querySelector("img").dataset.name;
+              if (vertical) {
+                gsap.to(e.currentTarget, {
+                  scale: 2,
+                  x: 0,
+                  y: 0,
+                });
+              } else {
                 gsap.to(e.currentTarget, {
                   scale: 3,
-                  x: window.innerWidth / 2,
-                  y: window.innerHeight / 2.5,
+                  x: 0,
+                  y: 0,
                 });
-                gsap.to(lastClicked, {
-                  x: () => `${randomNumber()}vw`,
-                  y: () => `${randomNumber()}vh`,
-                });
-                // const title = e.currentTarget.querySelector("h1");
-                const description = e.currentTarget.querySelector("div");
-                // setLastClickedTitle(title);
-                setLastClickedDescription(description);
-                // title.classList.remove("hidden");
-                description.classList.remove("hidden");
-                // lastClickedTitle.classList.add("hidden");
-                lastClickedDescription.classList.add("hidden");
-              }}
-            >
-              {/* <h1 className="text-yellow-400  hidden absolute top-[35%] left-[-50%]">TITOLO</h1> */}
-              <Image src={e} alt="foto" width={800} height={1200} className="relative" />
-              <div className=" hidden ">
-                <p className="text-yellow-400 text-[0.4vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
-              </div>
+              }
+
+              gsap.to(lastClicked, {
+                x: () => `${randomNumber()}vw`,
+                y: () => `${randomNumber()}vh`,
+              });
+              const description = e.currentTarget.querySelector("div");
+              setLastClickedDescription(description);
+              description.classList.remove("hidden");
+              lastClickedDescription.classList.add("hidden");
+            }}
+          >
+            <Image src={e} alt="foto" width={800} height={1200} className="relative" data-name={e.includes("v") ? "vertical" : undefined} />
+            <div className=" hidden ">
+              <p className="text-yellow-400 text-[0.4vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
             </div>
-          );
-        })
-      }
+          </div>
+        );
+      })}
     </div>
   );
 }
