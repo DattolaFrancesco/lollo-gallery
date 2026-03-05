@@ -47,6 +47,9 @@ export default function DesktopGallery() {
   const containerRef = useRef(null);
   const imgsRef = useRef([]);
   const [loaded, setLoaded] = useState(false);
+  const [lastClicked, setLastClicked] = useState(null);
+  // const [lastClickedTitle, setLastClickedTitle] = useState(null);
+  const [lastClickedDescription, setLastClickedDescription] = useState(null);
   const loadImage = (src) => {
     return new Promise((resolve, reject) => {
       const img = new window.Image();
@@ -74,22 +77,40 @@ export default function DesktopGallery() {
     }
     return n;
   };
+  const shuffle = () => {
+    const images = document.querySelectorAll(".imgs");
+    images.forEach((e) => {
+      gsap.to(e, {
+        scale: 1,
+        x: () => `${randomNumber()}vw`,
+        y: () => `${randomNumber()}vh`,
+      });
+    });
+  };
   const clearScale = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
       gsap.to(e, { scale: 1 });
     });
+    gsap.to(lastClicked, {
+      x: () => `${randomNumber()}vw`,
+      y: () => `${randomNumber()}vh`,
+    });
+    // lastClickedTitle.classList.add("hidden");
+    lastClickedDescription.classList.add("hidden");
+    setLastClicked(null);
+    // setLastClickedTitle(null);
+    setLastClickedDescription(null);
   };
 
   useGSAP(
     () => {
       if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
-      gsap.set(img, { opacity: 0, x: 0, y: 0 });
+      gsap.set(img, { x: 0, y: 0 });
 
       gsap.to(img, {
         duration: 1.2,
-        opacity: 1,
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
         stagger: 0.1,
@@ -103,7 +124,6 @@ export default function DesktopGallery() {
         edgeResistance: 0.8,
         onClick() {
           img.forEach((el) => {
-            console.log("ciao");
             gsap.to(el, {
               scale: 1,
             });
@@ -121,21 +141,48 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
+      <button
+        onClick={() => {
+          shuffle();
+        }}
+        className="text-white absolute cursor-pointer"
+      >
+        Lollo Gallery
+      </button>
       {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
       {loaded &&
         gallery.map((e, i) => {
           return (
             <div
               key={i}
-              className=" imgs absolute w-1/12 "
+              className=" imgs absolute w-1/12  -translate-x-1/2 -translate-Y-1/2 "
               onClick={(e) => {
+                setLastClicked(e.currentTarget);
                 e.stopPropagation();
                 gsap.to(e.currentTarget, {
-                  scale: 4,
+                  scale: 3,
+                  x: window.innerWidth / 2,
+                  y: window.innerHeight / 2.5,
                 });
+                gsap.to(lastClicked, {
+                  x: () => `${randomNumber()}vw`,
+                  y: () => `${randomNumber()}vh`,
+                });
+                // const title = e.currentTarget.querySelector("h1");
+                const description = e.currentTarget.querySelector("div");
+                // setLastClickedTitle(title);
+                setLastClickedDescription(description);
+                // title.classList.remove("hidden");
+                description.classList.remove("hidden");
+                // lastClickedTitle.classList.add("hidden");
+                lastClickedDescription.classList.add("hidden");
               }}
             >
-              <Image src={e} alt="foto" width={800} height={1200} />
+              {/* <h1 className="text-yellow-400  hidden absolute top-[35%] left-[-50%]">TITOLO</h1> */}
+              <Image src={e} alt="foto" width={800} height={1200} className="relative" />
+              <div className=" hidden ">
+                <p className="text-yellow-400 text-[0.4vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
+              </div>
             </div>
           );
         })}
