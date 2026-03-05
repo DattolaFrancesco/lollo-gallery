@@ -131,7 +131,7 @@ export default function DesktopGallery() {
               onClick={(e) => {
                 e.stopPropagation();
                 gsap.to(e.currentTarget, {
-                  scale: 2,
+                  scale: 4,
                 });
               }}
             >
