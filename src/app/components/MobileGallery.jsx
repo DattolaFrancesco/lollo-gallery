@@ -250,7 +250,6 @@ export default function DesktopGallery() {
   };
   const Grid = () => {
     gridedRef.current = !gridedRef.current;
-    console.log(dragRef.current);
     if (gridedRef.current) dragRef.current.forEach((d) => d.disable());
     else dragRef.current.forEach((d) => d.enable());
     const images = document.querySelectorAll(".imgs");
@@ -338,7 +337,7 @@ export default function DesktopGallery() {
           e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
+        className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[10vh] z-9999"
       >
         Lollo Gallery
       </button>
@@ -397,7 +396,7 @@ export default function DesktopGallery() {
               height={450}
               placeholder="blur"
               blurDataURL={galleryBlur[i]}
-              className="relative [will-change:transform,opacity]"
+              className="relative will-change-[transform,opacity]"
               data-name={e.includes("v") ? "vertical" : undefined}
             />
             <div className=" hidden ">
