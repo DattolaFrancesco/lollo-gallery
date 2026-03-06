@@ -7,7 +7,7 @@
   break-inside: avoid;
   width: 100%;
   cursor: default !important;
-  pointer-events: none !important;
+  /* pointer-events: none !important; */
 }
 .transitionCustom {
   transition: 1s transform;

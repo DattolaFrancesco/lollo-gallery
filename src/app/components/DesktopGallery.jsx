@@ -68,8 +68,12 @@ const gallery = [
 export default function DesktopGallery() {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
+  const ModalRef = useRef(null);
+  const [activeImage, setActiveImage] = useState(0);
   const [btnGrid, setBtnGrid] = useState("Grid");
   const [loaded, setLoaded] = useState(false);
+  const gridedRef = useRef(false);
+  const touchedGrid = useRef(false);
   const [lastClicked, setLastClicked] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
   const loadImage = (src) => {
@@ -104,6 +108,17 @@ export default function DesktopGallery() {
     if (direction > 0.5) return n;
     else return -n;
   };
+  const openModal = (e) => {
+    setActiveImage(parseInt(e.dataset.number));
+    const modal = ModalRef.current;
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  };
+  const closeModal = (e) => {
+    const modal = ModalRef.current;
+    modal.classList.add("hidden");
+  };
+
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
@@ -119,6 +134,7 @@ export default function DesktopGallery() {
     setLastClickedDescription(null);
   };
   const Grid = () => {
+    gridedRef.current = !gridedRef.current;
     const images = document.querySelectorAll(".imgs");
     const container = containerRef.current;
     const btnShuffle = btnShuffleRef.current;
@@ -204,7 +220,7 @@ export default function DesktopGallery() {
           e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer fixed bottom-[10vh] z-99999999"
+        className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
       >
         Lollo Gallery
       </button>
@@ -213,7 +229,7 @@ export default function DesktopGallery() {
           e.stopPropagation();
           Grid();
         }}
-        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-99999999"
+        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
       >
         {btnGrid ? "Grid" : "Shuffle"}
       </button>
@@ -222,8 +238,10 @@ export default function DesktopGallery() {
         return (
           <div
             key={i}
+            data-number={i}
             className=" imgs absolute w-[12vw] opacity-0"
             onClick={(e) => {
+              if (gridedRef.current) return openModal(e.currentTarget);
               setLastClicked(e.currentTarget);
               e.stopPropagation();
               const vertical = e.currentTarget.querySelector("img").dataset.name;
@@ -258,6 +276,15 @@ export default function DesktopGallery() {
           </div>
         );
       })}
+      <div
+        ref={ModalRef}
+        onClick={() => {
+          closeModal();
+        }}
+        className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
+      >
+        {activeImage && <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className="relative " />}
+      </div>
     </div>
   );
 }
