@@ -1,104 +1,3 @@
-// "use client";
-// import Image from "next/image";
-// import gsap from "gsap";
-// import { useGSAP } from "@gsap/react";
-// import ScrollTrigger from "gsap/src/ScrollTrigger";
-// import { useRef } from "react";
-
-// gsap.registerPlugin(ScrollTrigger);
-
-// export default function MobileGallery() {
-//   const gallery = [
-//     "/gallery/1.jpg",
-//     "/gallery/2.jpg",
-//     "/gallery/3.jpg",
-//     "/gallery/4.jpg",
-//     "/gallery/5.jpg",
-//     "/gallery/6.jpg",
-//     "/gallery/7.jpg",
-//     "/gallery/8.jpg",
-//     "/gallery/9.jpg",
-//     "/gallery/10.jpg",
-//     "/gallery/11.jpg",
-//     "/gallery/12.jpg",
-//     "/gallery/13.jpg",
-//     "/gallery/14.jpg",
-//     "/gallery/15.jpg",
-//     "/gallery/16.jpg",
-//     "/gallery/17.jpg",
-//     "/gallery/18.jpg",
-//     "/gallery/19.jpg",
-//     "/gallery/20.jpg",
-//     "/gallery/21.jpg",
-//     "/gallery/22.jpg",
-//     "/gallery/23.jpg",
-//     "/gallery/24.jpg",
-//     "/gallery/25.jpg",
-//     "/gallery/26.jpg",
-//     "/gallery/27.jpg",
-//     "/gallery/28.jpg",
-//     "/gallery/29.jpg",
-//     "/gallery/30.jpg",
-//     "/gallery/31.jpg",
-//     "/gallery/32.jpg",
-//   ];
-//   const imagesRef = useRef([]);
-//   const containerRef = useRef(null);
-//   const random = () => {
-//     return Math.floor(Math.random() * 120);
-//   };
-//   const randomDir = () => {
-//     const n = Math.random() * 1;
-//     if (n > 0.5) return -1;
-//     else return 1;
-//   };
-//   useGSAP(() => {
-//     const tl = gsap.timeline({
-//       scrollTrigger: {
-//         trigger: containerRef.current,
-//         start: "top top",
-//         end: `+=${gallery.length * 100 * 2}%`,
-//         scrub: true,
-//         pin: true,
-//         markers: true,
-//         snap: {
-//           snapTo: "labels",
-//           duration: 0.5,
-//         },
-//       },
-//     });
-//     imagesRef.current.forEach((img, i) => {
-//       gsap.set(img, { left: `${randomDir() * random()}%`, top: `${randomDir() * random()}%`, opacity: 0 });
-
-//       tl.to(img, {
-//         left: "25%",
-//         top: "0%",
-//         opacity: 1,
-//         scale: 1.8,
-//       });
-//       tl.addLabel(`img-${i}`);
-//     });
-//   }, []);
-
-//   return (
-//     <>
-//       <div ref={containerRef} className=" overflow-hidden  min-h-[100svh] flex justify-center items-center flex-col relative">
-//         {gallery.map((e, i) => {
-//           return (
-//             <div
-//               key={i}
-//               ref={(el) => (imagesRef.current[i] = el)}
-//               style={{ willChange: "transform, opacity, scale" }}
-//               className=" w-1/2 h-screen flex items-center absolute test origin-center"
-//             >
-//               <Image src={e} alt="foto" width={800} height={1200} className="photo" />
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </>
-//   );
-// }
 "use client";
 import Image from "next/image";
 import gsap from "gsap";
@@ -165,12 +64,73 @@ const gallery = [
   "/gallery/53.jpg",
   "/gallery/54.jpg",
 ];
+const descriptionPhotos = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26",
+  "27",
+  "28",
+  "29",
+  "30",
+  "31",
+  "32",
+  "33",
+  "34",
+  "35",
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+  "45",
+  "46",
+  "47",
+  "48",
+  "49",
+  "50",
+  "51",
+  "52",
+  "53",
+  "54",
+];
 
-export default function MobileGallery() {
+export default function DesktopGallery() {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
+  const dragRef = useRef([]);
+  const ModalRef = useRef(null);
+  const [activeImage, setActiveImage] = useState(null);
+  const [activeImageRatio, setActiveImageRatio] = useState(null);
   const [btnGrid, setBtnGrid] = useState("Grid");
   const [loaded, setLoaded] = useState(false);
+  const gridedRef = useRef(false);
   const [lastClicked, setLastClicked] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
   const loadImage = (src) => {
@@ -205,6 +165,19 @@ export default function MobileGallery() {
     if (direction > 0.5) return n;
     else return -n;
   };
+  const openModal = (e) => {
+    setActiveImageRatio(e.dataset.ratio);
+    setActiveImage(parseInt(e.dataset.number));
+    const modal = ModalRef.current;
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    modal.classList.add("flex-col");
+  };
+  const closeModal = (e) => {
+    const modal = ModalRef.current;
+    modal.classList.add("hidden");
+  };
+
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
@@ -220,6 +193,26 @@ export default function MobileGallery() {
     setLastClickedDescription(null);
   };
   const Grid = () => {
+    gridedRef.current = !gridedRef.current;
+    if (gridedRef.current) {
+      dragRef.current.forEach((d) => d.kill());
+      dragRef.current = [];
+    } else {
+      const img = document.querySelectorAll(".imgs");
+      dragRef.current = Draggable.create(img, {
+        type: "x,y",
+        bounds: containerRef.current,
+        inertia: true,
+        edgeResistance: 0.8,
+        onClick() {
+          img.forEach((el) => {
+            gsap.to(el, {
+              scale: 1,
+            });
+          });
+        },
+      });
+    }
     const images = document.querySelectorAll(".imgs");
     const container = containerRef.current;
     const btnShuffle = btnShuffleRef.current;
@@ -272,7 +265,7 @@ export default function MobileGallery() {
         ease: "power1.out",
       });
 
-      Draggable.create(img, {
+      dragRef.current = Draggable.create(img, {
         type: "x,y",
         bounds: containerRef.current,
         inertia: true,
@@ -294,7 +287,7 @@ export default function MobileGallery() {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen relative  shuffle "
+      className="w-screen min-h-screen bg-black relative  shuffle "
       onClick={() => {
         clearScale();
       }}
@@ -305,7 +298,7 @@ export default function MobileGallery() {
           e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer fixed bottom-[10vh] z-99999999"
+        className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
       >
         Lollo Gallery
       </button>
@@ -314,7 +307,7 @@ export default function MobileGallery() {
           e.stopPropagation();
           Grid();
         }}
-        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-99999999"
+        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
       >
         {btnGrid ? "Grid" : "Shuffle"}
       </button>
@@ -323,8 +316,12 @@ export default function MobileGallery() {
         return (
           <div
             key={i}
-            className=" imgs absolute w-[30vw] opacity-0"
+            data-number={i}
+            data-ratio={e.includes("v") ? "vertical" : undefined}
+            className=" imgs absolute w-[12vw] opacity-0"
             onClick={(e) => {
+              setActiveImage(parseInt(e.currentTarget.dataset.number));
+              if (gridedRef.current) return openModal(e.currentTarget);
               setLastClicked(e.currentTarget);
               e.stopPropagation();
               const vertical = e.currentTarget.querySelector("img").dataset.name;
@@ -347,18 +344,31 @@ export default function MobileGallery() {
                 y: () => `${randomNumber()}vh`,
               });
               const description = e.currentTarget.querySelector("div");
+
               setLastClickedDescription(description);
               description.classList.remove("hidden");
               lastClickedDescription.classList.add("hidden");
             }}
           >
-            <Image src={e} alt="foto" width={800} height={1200} quality={100} className="relative" data-name={e.includes("v") ? "vertical" : undefined} />
+            <Image src={e} alt="foto" width={800} height={1200} className="relative" data-name={e.includes("v") ? "vertical" : undefined} />
             <div className=" hidden ">
-              <p className="text-yellow-400 text-[1vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
+              <p className="text-white text-[0.4vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
             </div>
           </div>
         );
       })}
+      <div
+        ref={ModalRef}
+        onClick={() => {
+          closeModal();
+        }}
+        className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
+      >
+        {activeImage && (
+          <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVerticalMobile" : ""}`} />
+        )}
+        <p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+      </div>
     </div>
   );
 }

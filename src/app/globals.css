@@ -8,6 +8,14 @@
   width: 100%;
   cursor: pointer !important;
 }
+.gridCustomMobile {
+  position: relative;
+  display: block;
+  transform: none !important;
+  break-inside: avoid;
+  width: 100%;
+  cursor: pointer !important;
+}
 .transitionCustom {
   transition: 1s transform;
 }
@@ -20,4 +28,7 @@
 }
 .scaleModalVertical {
   width: 25vw;
+}
+.scaleModalVerticalMobile {
+  width: 75vw;
 }
