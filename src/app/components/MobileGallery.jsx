@@ -365,7 +365,14 @@ export default function DesktopGallery() {
         className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
       >
         {activeImage && (
-          <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVerticalMobile" : ""}`} />
+          <Image
+            src={gallery[activeImage]}
+            alt="foto"
+            width={800}
+            height={1200}
+            className={`relative  scaleModalVerticalMobile `}
+            //  ${activeImageRatio ? "scaleModalVerticalMobile" : ""}
+          />
         )}
         <p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
