@@ -130,7 +130,6 @@ export default function DesktopGallery() {
   const [btnGrid, setBtnGrid] = useState("Grid");
   const [loaded, setLoaded] = useState(false);
   const gridedRef = useRef(false);
-  const touchedGrid = useRef(false);
   const [lastClicked, setLastClicked] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
   const loadImage = (src) => {
@@ -325,6 +324,7 @@ export default function DesktopGallery() {
                 y: () => `${randomNumber()}vh`,
               });
               const description = e.currentTarget.querySelector("div");
+
               setLastClickedDescription(description);
               description.classList.remove("hidden");
               lastClickedDescription.classList.add("hidden");
@@ -344,7 +344,9 @@ export default function DesktopGallery() {
         }}
         className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
       >
-        {<Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`} />}
+        {activeImage && (
+          <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`} />
+        )}
         <p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
     </div>
