@@ -6,8 +6,7 @@
   transform: none !important;
   break-inside: avoid;
   width: 100%;
-  cursor: default !important;
-  /* pointer-events: none !important; */
+  cursor: pointer !important;
 }
 .transitionCustom {
   transition: 1s transform;
@@ -18,4 +17,7 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+}
+.scaleModalVertical {
+  width: 25vw;
 }

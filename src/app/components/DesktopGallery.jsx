@@ -64,12 +64,69 @@ const gallery = [
   "/gallery/53.jpg",
   "/gallery/54.jpg",
 ];
+const descriptionPhotos = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26",
+  "27",
+  "28",
+  "29",
+  "30",
+  "31",
+  "32",
+  "33",
+  "34",
+  "35",
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+  "45",
+  "46",
+  "47",
+  "48",
+  "49",
+  "50",
+  "51",
+  "52",
+  "53",
+  "54",
+];
 
 export default function DesktopGallery() {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
   const ModalRef = useRef(null);
-  const [activeImage, setActiveImage] = useState(0);
+  const [activeImage, setActiveImage] = useState(null);
+  const [activeImageRatio, setActiveImageRatio] = useState(null);
   const [btnGrid, setBtnGrid] = useState("Grid");
   const [loaded, setLoaded] = useState(false);
   const gridedRef = useRef(false);
@@ -109,10 +166,12 @@ export default function DesktopGallery() {
     else return -n;
   };
   const openModal = (e) => {
+    setActiveImageRatio(e.dataset.ratio);
     setActiveImage(parseInt(e.dataset.number));
     const modal = ModalRef.current;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    modal.classList.add("flex-col");
   };
   const closeModal = (e) => {
     const modal = ModalRef.current;
@@ -209,7 +268,7 @@ export default function DesktopGallery() {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-gray-900 relative  shuffle "
+      className="w-screen min-h-screen bg-black relative  shuffle "
       onClick={() => {
         clearScale();
       }}
@@ -239,8 +298,10 @@ export default function DesktopGallery() {
           <div
             key={i}
             data-number={i}
+            data-ratio={e.includes("v") ? "vertical" : undefined}
             className=" imgs absolute w-[12vw] opacity-0"
             onClick={(e) => {
+              setActiveImage(parseInt(e.currentTarget.dataset.number));
               if (gridedRef.current) return openModal(e.currentTarget);
               setLastClicked(e.currentTarget);
               e.stopPropagation();
@@ -271,7 +332,7 @@ export default function DesktopGallery() {
           >
             <Image src={e} alt="foto" width={800} height={1200} className="relative" data-name={e.includes("v") ? "vertical" : undefined} />
             <div className=" hidden ">
-              <p className="text-yellow-400 text-[0.4vw] bg-blue-700 ">descrixione cmdcsmkskmmkmcsmklcl;dl;dlm; bla bla bla</p>
+              <p className="text-white text-[0.4vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
             </div>
           </div>
         );
@@ -283,7 +344,8 @@ export default function DesktopGallery() {
         }}
         className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
       >
-        {activeImage && <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className="relative " />}
+        {<Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`} />}
+        <p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
     </div>
   );
