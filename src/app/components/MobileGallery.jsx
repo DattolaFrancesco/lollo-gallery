@@ -64,6 +64,62 @@ const gallery = [
   "/gallery/53.jpg",
   "/gallery/54.jpg",
 ];
+const galleryBlur = [
+  "/gallery-blur/1.webp",
+  "/gallery-blur/2v.webp",
+  "/gallery-blur/3.webp",
+  "/gallery-blur/4.webp",
+  "/gallery-blur/5.webp",
+  "/gallery-blur/6.webp",
+  "/gallery-blur/7v.webp",
+  "/gallery-blur/8.webp",
+  "/gallery-blur/9.webp",
+  "/gallery-blur/10v.webp",
+  "/gallery-blur/11.webp",
+  "/gallery-blur/12.webp",
+  "/gallery-blur/13.webp",
+  "/gallery-blur/14.webp",
+  "/gallery-blur/15.webp",
+  "/gallery-blur/16.webp",
+  "/gallery-blur/17.webp",
+  "/gallery-blur/18.webp",
+  "/gallery-blur/19.webp",
+  "/gallery-blur/20.webp",
+  "/gallery-blur/21.webp",
+  "/gallery-blur/22.webp",
+  "/gallery-blur/23.webp",
+  "/gallery-blur/24v.webp",
+  "/gallery-blur/25.webp",
+  "/gallery-blur/26.webp",
+  "/gallery-blur/27v.webp",
+  "/gallery-blur/28v.webp",
+  "/gallery-blur/29.webp",
+  "/gallery-blur/30.webp",
+  "/gallery-blur/31.webp",
+  "/gallery-blur/32.webp",
+  "/gallery-blur/33v.webp",
+  "/gallery-blur/34v.webp",
+  "/gallery-blur/35v.webp",
+  "/gallery-blur/36.webp",
+  "/gallery-blur/37.webp",
+  "/gallery-blur/38.webp",
+  "/gallery-blur/39.webp",
+  "/gallery-blur/40.webp",
+  "/gallery-blur/41.webp",
+  "/gallery-blur/42.webp",
+  "/gallery-blur/43.webp",
+  "/gallery-blur/44.webp",
+  "/gallery-blur/45.webp",
+  "/gallery-blur/46.webp",
+  "/gallery-blur/47.webp",
+  "/gallery-blur/48.webp",
+  "/gallery-blur/49.webp",
+  "/gallery-blur/50.webp",
+  "/gallery-blur/51.webp",
+  "/gallery-blur/52.webp",
+  "/gallery-blur/53.webp",
+  "/gallery-blur/54.webp",
+];
 const descriptionPhotos = [
   "1",
   "2",
@@ -126,8 +182,8 @@ export default function DesktopGallery() {
   const btnShuffleRef = useRef(null);
   const dragRef = useRef([]);
   const ModalRef = useRef(null);
-  const [activeImage, setActiveImage] = useState(null);
-  const [activeImageRatio, setActiveImageRatio] = useState(null);
+  const [activeImage, setActiveImage] = useState(0);
+  // const [activeImageRatio, setActiveImageRatio] = useState(null);
   const [btnGrid, setBtnGrid] = useState("Grid");
   const [loaded, setLoaded] = useState(false);
   const gridedRef = useRef(false);
@@ -166,7 +222,7 @@ export default function DesktopGallery() {
     else return -n;
   };
   const openModal = (e) => {
-    setActiveImageRatio(e.dataset.ratio);
+    // setActiveImageRatio(e.dataset.ratio);
     setActiveImage(parseInt(e.dataset.number));
     const modal = ModalRef.current;
     modal.classList.remove("hidden");
@@ -194,25 +250,9 @@ export default function DesktopGallery() {
   };
   const Grid = () => {
     gridedRef.current = !gridedRef.current;
-    if (gridedRef.current) {
-      dragRef.current.forEach((d) => d.kill());
-      dragRef.current = [];
-    } else {
-      const img = document.querySelectorAll(".imgs");
-      dragRef.current = Draggable.create(img, {
-        type: "x,y",
-        bounds: containerRef.current,
-        inertia: true,
-        edgeResistance: 0.8,
-        onClick() {
-          img.forEach((el) => {
-            gsap.to(el, {
-              scale: 1,
-            });
-          });
-        },
-      });
-    }
+    console.log(dragRef.current);
+    if (gridedRef.current) dragRef.current.forEach((d) => d.disable());
+    else dragRef.current.forEach((d) => d.enable());
     const images = document.querySelectorAll(".imgs");
     const container = containerRef.current;
     const btnShuffle = btnShuffleRef.current;
@@ -307,7 +347,7 @@ export default function DesktopGallery() {
           e.stopPropagation();
           Grid();
         }}
-        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
+        className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
       >
         {btnGrid ? "Grid" : "Shuffle"}
       </button>
@@ -350,7 +390,16 @@ export default function DesktopGallery() {
               lastClickedDescription.classList.add("hidden");
             }}
           >
-            <Image src={e} alt="foto" width={800} height={1200} className="relative" data-name={e.includes("v") ? "vertical" : undefined} />
+            <Image
+              src={e}
+              alt="foto"
+              width={300}
+              height={450}
+              placeholder="blur"
+              blurDataURL={galleryBlur[i]}
+              className="relative [will-change:transform,opacity]"
+              data-name={e.includes("v") ? "vertical" : undefined}
+            />
             <div className=" hidden ">
               <p className="text-white text-[0.4vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
             </div>
@@ -364,17 +413,16 @@ export default function DesktopGallery() {
         }}
         className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
       >
-        {activeImage && (
-          <Image
-            src={gallery[activeImage]}
-            alt="foto"
-            width={800}
-            height={1200}
-            className={`relative  scaleModalVerticalMobile `}
-            //  ${activeImageRatio ? "scaleModalVerticalMobile" : ""}
-          />
-        )}
-        <p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+        (
+        <Image
+          src={gallery[activeImage]}
+          alt="foto"
+          width={800}
+          height={1200}
+          className={`relative  scaleModalVerticalMobile`}
+          //  ${activeImageRatio ? "scaleModalVerticalMobile" : ""}
+        />
+        )<p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
     </div>
   );

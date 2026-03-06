@@ -10,7 +10,7 @@
 }
 .gridCustomMobile {
   position: relative;
-  display: block;
+  display: flex;
   transform: none !important;
   break-inside: avoid;
   width: 100%;
@@ -31,4 +31,7 @@
 }
 .scaleModalVerticalMobile {
   width: 75vw;
+}
+.imgChange {
+  will-change: transform, opacity;
 }
