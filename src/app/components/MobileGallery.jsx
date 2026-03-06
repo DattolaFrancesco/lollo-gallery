@@ -326,7 +326,7 @@ export default function DesktopGallery() {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-black relative  shuffle "
+      className="w-screen min-h-screen bg-black relative  shuffle  "
       onClick={() => {
         clearScale();
       }}
@@ -357,7 +357,7 @@ export default function DesktopGallery() {
             key={i}
             data-number={i}
             data-ratio={e.includes("v") ? "vertical" : undefined}
-            className=" imgs absolute w-[12vw] opacity-0"
+            className=" imgs absolute w-[30vw] opacity-0"
             onClick={(e) => {
               setActiveImage(parseInt(e.currentTarget.dataset.number));
               if (gridedRef.current) return openModal(e.currentTarget);
@@ -365,6 +365,7 @@ export default function DesktopGallery() {
               e.stopPropagation();
               const vertical = e.currentTarget.querySelector("img").dataset.name;
               if (vertical) {
+                console.log(e.currentTarget);
                 gsap.to(e.currentTarget, {
                   scale: 2,
                   x: 0,
@@ -372,7 +373,7 @@ export default function DesktopGallery() {
                 });
               } else {
                 gsap.to(e.currentTarget, {
-                  scale: 3,
+                  scale: 2.5,
                   x: 0,
                   y: 0,
                 });
@@ -400,7 +401,7 @@ export default function DesktopGallery() {
               data-name={e.includes("v") ? "vertical" : undefined}
             />
             <div className=" hidden ">
-              <p className="text-white text-[0.4vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+              <p className="text-white text-[3vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
             </div>
           </div>
         );
