@@ -107,12 +107,16 @@ export default function DesktopGallery() {
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
+      const description = e.querySelector("div");
+      if (description) description.classList.add("hidden");
       gsap.to(e, {
         scale: 1,
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
       });
     });
+    setLastClicked(null);
+    setLastClickedDescription(null);
   };
   const Grid = () => {
     const images = document.querySelectorAll(".imgs");
@@ -125,9 +129,20 @@ export default function DesktopGallery() {
     container.classList.toggle("shuffle");
     container.classList.toggle("columns-8");
     container.classList.toggle("gap-0");
+    setLastClicked(null);
+    setLastClickedDescription(null);
     images.forEach((e) => {
+      gsap.to(e, { scale: 1 });
       e.classList.toggle("gridCustom");
+      e.classList.add("transitionCustom");
+      const description = e.querySelector("div");
+      if (description) description.classList.add("hidden");
     });
+    setTimeout(() => {
+      images.forEach((e) => {
+        e.classList.remove("transitionCustom");
+      });
+    }, 1000);
   };
   const clearScale = () => {
     const images = document.querySelectorAll(".imgs");
@@ -198,7 +213,7 @@ export default function DesktopGallery() {
           e.stopPropagation();
           Grid();
         }}
-        className="text-white  cursor-pointer fixed top-[10vh] z-99999999"
+        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-99999999"
       >
         {btnGrid ? "Grid" : "Shuffle"}
       </button>

@@ -6,8 +6,11 @@
   transform: none !important;
   break-inside: avoid;
   width: 100%;
-  transition: 2s all;
   cursor: default !important;
+  pointer-events: none !important;
+}
+.transitionCustom {
+  transition: 1s transform;
 }
 .shuffle {
   display: flex;
