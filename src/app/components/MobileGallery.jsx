@@ -237,10 +237,10 @@ export default function DesktopGallery() {
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
+      e.classList.remove("w-[80vw]");
       const description = e.querySelector("div");
       if (description) description.classList.add("hidden");
       gsap.to(e, {
-        scale: 1,
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
       });
@@ -280,7 +280,7 @@ export default function DesktopGallery() {
   const clearScale = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
-      gsap.to(e, { scale: 1 });
+      e.classList.remove("w-[80vw]");
     });
     gsap.to(lastClicked, {
       x: () => `${randomNumber()}vw`,
@@ -311,9 +311,7 @@ export default function DesktopGallery() {
         edgeResistance: 0.8,
         onClick() {
           img.forEach((el) => {
-            gsap.to(el, {
-              scale: 1,
-            });
+            el.classList.remove("w-[80vw]");
           });
         },
       });
@@ -337,7 +335,7 @@ export default function DesktopGallery() {
           e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[10vh] z-9999"
+        className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
       >
         Lollo Gallery
       </button>
@@ -351,61 +349,51 @@ export default function DesktopGallery() {
         {btnGrid ? "Grid" : "Shuffle"}
       </button>
       {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
-      {gallery.map((e, i) => {
-        return (
-          <div
-            key={i}
-            data-number={i}
-            data-ratio={e.includes("v") ? "vertical" : undefined}
-            className=" imgs absolute w-[30vw] opacity-0"
-            onClick={(e) => {
-              setActiveImage(parseInt(e.currentTarget.dataset.number));
-              if (gridedRef.current) return openModal(e.currentTarget);
-              setLastClicked(e.currentTarget);
-              e.stopPropagation();
-              const vertical = e.currentTarget.querySelector("img").dataset.name;
-              if (vertical) {
-                console.log(e.currentTarget);
+      {loaded &&
+        gallery.map((e, i) => {
+          return (
+            <div
+              key={i}
+              data-number={i}
+              data-ratio={e.includes("v") ? "vertical" : undefined}
+              className=" imgs absolute w-[30vw] opacity-0"
+              onClick={(e) => {
+                setActiveImage(parseInt(e.currentTarget.dataset.number));
+                if (gridedRef.current) return openModal(e.currentTarget);
+                setLastClicked(e.currentTarget);
+                e.stopPropagation();
                 gsap.to(e.currentTarget, {
-                  scale: 2,
                   x: 0,
                   y: 0,
                 });
-              } else {
-                gsap.to(e.currentTarget, {
-                  scale: 2.5,
-                  x: 0,
-                  y: 0,
+                e.currentTarget.classList.add("w-[80vw]");
+                gsap.to(lastClicked, {
+                  x: () => `${randomNumber()}vw`,
+                  y: () => `${randomNumber()}vh`,
                 });
-              }
+                const description = e.currentTarget.querySelector("div");
 
-              gsap.to(lastClicked, {
-                x: () => `${randomNumber()}vw`,
-                y: () => `${randomNumber()}vh`,
-              });
-              const description = e.currentTarget.querySelector("div");
-
-              setLastClickedDescription(description);
-              description.classList.remove("hidden");
-              lastClickedDescription.classList.add("hidden");
-            }}
-          >
-            <Image
-              src={e}
-              alt="foto"
-              width={300}
-              height={450}
-              placeholder="blur"
-              blurDataURL={galleryBlur[i]}
-              className="relative will-change-[transform,opacity]"
-              data-name={e.includes("v") ? "vertical" : undefined}
-            />
-            <div className=" hidden ">
-              <p className="text-white text-[3vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+                setLastClickedDescription(description);
+                description.classList.remove("hidden");
+                lastClickedDescription.classList.add("hidden");
+              }}
+            >
+              <Image
+                src={e}
+                alt="foto"
+                width={300}
+                height={450}
+                placeholder="blur"
+                blurDataURL={galleryBlur[i]}
+                className="relative w-full will-change-[transform,opacity]"
+                data-name={e.includes("v") ? "vertical" : undefined}
+              />
+              <div className=" hidden ">
+                <p className="text-white text-[3vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
       <div
         ref={ModalRef}
         onClick={() => {
@@ -419,7 +407,7 @@ export default function DesktopGallery() {
           alt="foto"
           width={800}
           height={1200}
-          className={`relative  scaleModalVerticalMobile`}
+          className={`relative scaleModalVerticalMobile`}
           //  ${activeImageRatio ? "scaleModalVerticalMobile" : ""}
         />
         )<p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
