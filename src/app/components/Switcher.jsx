@@ -4,7 +4,7 @@ import MobileGallery from "./MobileGallery";
 import DesktopGallery from "./DesktopGallery";
 import { useState, useEffect } from "react";
 
-export default function Switcher() {
+export default function Switcher({ blurData }) {
   const [isMobile, setIsMobile] = useState(null);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export default function Switcher() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   if (isMobile === null) return;
-  return isMobile ? <MobileGallery /> : <DesktopGallery />;
+  return isMobile ? <MobileGallery blurData={blurData} /> : <DesktopGallery blurData={blurData} />;
 }

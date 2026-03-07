@@ -121,7 +121,7 @@ const descriptionPhotos = [
   "54",
 ];
 
-export default function DesktopGallery() {
+export default function DesktopGallery({ blurData }) {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
   const ModalRef = useRef(null);
@@ -233,7 +233,7 @@ export default function DesktopGallery() {
   };
   useGSAP(
     () => {
-      if (!loaded) return;
+      //if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
       gsap.set(img, { x: 0, y: 0, opacity: 1 });
 
@@ -261,7 +261,7 @@ export default function DesktopGallery() {
     },
     {
       scope: containerRef,
-      dependencies: [loaded],
+      //dependencies: [loaded],
     },
   );
   return (
@@ -272,30 +272,26 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      {loaded && (
-        <>
-          <button
-            ref={btnShuffleRef}
-            onClick={(e) => {
-              e.stopPropagation();
-              shuffle();
-            }}
-            className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
-          >
-            Lollo Gallery
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              Grid();
-            }}
-            className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
-          >
-            {btnGrid ? "Grid" : "Shuffle"}
-          </button>
-        </>
-      )}
-      {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
+      <button
+        ref={btnShuffleRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          shuffle();
+        }}
+        className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
+      >
+        Lollo Gallery
+      </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          Grid();
+        }}
+        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
+      >
+        {btnGrid ? "Grid" : "Shuffle"}
+      </button>
+      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {gallery.map((e, i) => {
         return (
           <div
@@ -334,7 +330,17 @@ export default function DesktopGallery() {
               lastClickedDescription.classList.add("hidden");
             }}
           >
-            <Image src={e} alt="foto" width={800} height={1200} className="relative" data-name={e.includes("v") ? "vertical" : undefined} />
+            <Image
+              src={e}
+              alt="foto"
+              width={1200}
+              height={800}
+              placeholder="blur"
+              blurDataURL={blurData[i]}
+              className="relative"
+              style={{ opacity: 1 }}
+              data-name={e.includes("v") ? "vertical" : undefined}
+            />
             <div className=" hidden ">
               <p className="text-white text-[0.4vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
             </div>
@@ -349,8 +355,19 @@ export default function DesktopGallery() {
         className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
       >
         (
-        <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`} />)
-        <p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+        {activeImage !== null && (
+          <Image
+            src={gallery[activeImage]}
+            alt="foto"
+            width={800}
+            height={1200}
+            placeholder="blur"
+            blurDataURL={blurData[activeImage]}
+            style={{ opacity: 1 }}
+            className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`}
+          />
+        )}
+        )<p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
     </div>
   );

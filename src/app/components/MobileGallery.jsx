@@ -64,62 +64,6 @@ const gallery = [
   "/gallery/53.jpg",
   "/gallery/54.jpg",
 ];
-const galleryBlur = [
-  "/gallery-blur/1.webp",
-  "/gallery-blur/2v.webp",
-  "/gallery-blur/3.webp",
-  "/gallery-blur/4.webp",
-  "/gallery-blur/5.webp",
-  "/gallery-blur/6.webp",
-  "/gallery-blur/7v.webp",
-  "/gallery-blur/8.webp",
-  "/gallery-blur/9.webp",
-  "/gallery-blur/10v.webp",
-  "/gallery-blur/11.webp",
-  "/gallery-blur/12.webp",
-  "/gallery-blur/13.webp",
-  "/gallery-blur/14.webp",
-  "/gallery-blur/15.webp",
-  "/gallery-blur/16.webp",
-  "/gallery-blur/17.webp",
-  "/gallery-blur/18.webp",
-  "/gallery-blur/19.webp",
-  "/gallery-blur/20.webp",
-  "/gallery-blur/21.webp",
-  "/gallery-blur/22.webp",
-  "/gallery-blur/23.webp",
-  "/gallery-blur/24v.webp",
-  "/gallery-blur/25.webp",
-  "/gallery-blur/26.webp",
-  "/gallery-blur/27v.webp",
-  "/gallery-blur/28v.webp",
-  "/gallery-blur/29.webp",
-  "/gallery-blur/30.webp",
-  "/gallery-blur/31.webp",
-  "/gallery-blur/32.webp",
-  "/gallery-blur/33v.webp",
-  "/gallery-blur/34v.webp",
-  "/gallery-blur/35v.webp",
-  "/gallery-blur/36.webp",
-  "/gallery-blur/37.webp",
-  "/gallery-blur/38.webp",
-  "/gallery-blur/39.webp",
-  "/gallery-blur/40.webp",
-  "/gallery-blur/41.webp",
-  "/gallery-blur/42.webp",
-  "/gallery-blur/43.webp",
-  "/gallery-blur/44.webp",
-  "/gallery-blur/45.webp",
-  "/gallery-blur/46.webp",
-  "/gallery-blur/47.webp",
-  "/gallery-blur/48.webp",
-  "/gallery-blur/49.webp",
-  "/gallery-blur/50.webp",
-  "/gallery-blur/51.webp",
-  "/gallery-blur/52.webp",
-  "/gallery-blur/53.webp",
-  "/gallery-blur/54.webp",
-];
 const descriptionPhotos = [
   "1",
   "2",
@@ -177,7 +121,7 @@ const descriptionPhotos = [
   "54",
 ];
 
-export default function DesktopGallery() {
+export default function DesktopGallery({ blurData }) {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
   const dragRef = useRef([]);
@@ -322,7 +266,7 @@ export default function DesktopGallery() {
   };
   useGSAP(
     () => {
-      if (!loaded) return;
+      //if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
       gsap.set(img, { x: 0, y: 0, opacity: 1 });
 
@@ -352,7 +296,7 @@ export default function DesktopGallery() {
     },
     {
       scope: containerRef,
-      dependencies: [loaded],
+      // dependencies: [loaded],
     },
   );
   return (
@@ -363,32 +307,32 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      {loaded && (
-        <>
-          <button
-            ref={btnShuffleRef}
-            onClick={(e) => {
-              e.stopPropagation();
-              shuffle();
-            }}
-            className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
-          >
-            Lollo Gallery
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              Grid();
-            }}
-            className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
-          >
-            {btnGrid ? "Grid" : "Shuffle"}
-          </button>
-        </>
-      )}
+      {/* {loaded && ( */}
+      <>
+        <button
+          ref={btnShuffleRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            shuffle();
+          }}
+          className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
+        >
+          Lollo Gallery
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            Grid();
+          }}
+          className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
+        >
+          {btnGrid ? "Grid" : "Shuffle"}
+        </button>
+      </>
 
-      {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
-      {loaded &&
+      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
+      {
+        //loaded &&
         gallery.map((e, i) => {
           return (
             <div
@@ -406,7 +350,8 @@ export default function DesktopGallery() {
                 width={450}
                 height={300}
                 placeholder="blur"
-                blurDataURL={galleryBlur[i]}
+                blurDataURL={blurData[i]}
+                style={{ opacity: 1 }}
                 className="relative w-full will-change-[transform,opacity]"
                 data-name={e.includes("v") ? "vertical" : undefined}
               />
@@ -415,7 +360,8 @@ export default function DesktopGallery() {
               </div>
             </div>
           );
-        })}
+        })
+      }
       <div
         ref={ModalRef}
         onClick={() => {
@@ -431,7 +377,8 @@ export default function DesktopGallery() {
           height={800}
           className={`relative scaleModalVerticalMobile`}
           placeholder="blur"
-          blurDataURL={galleryBlur[activeImage]}
+          blurDataURL={blurData[activeImage]}
+          style={{ opacity: 1 }}
         />
         )<p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
