@@ -272,25 +272,29 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      <button
-        ref={btnShuffleRef}
-        onClick={(e) => {
-          e.stopPropagation();
-          shuffle();
-        }}
-        className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
-      >
-        Lollo Gallery
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          Grid();
-        }}
-        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
-      >
-        {btnGrid ? "Grid" : "Shuffle"}
-      </button>
+      {loaded && (
+        <>
+          <button
+            ref={btnShuffleRef}
+            onClick={(e) => {
+              e.stopPropagation();
+              shuffle();
+            }}
+            className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
+          >
+            Lollo Gallery
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              Grid();
+            }}
+            className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
+          >
+            {btnGrid ? "Grid" : "Shuffle"}
+          </button>
+        </>
+      )}
       {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
       {gallery.map((e, i) => {
         return (

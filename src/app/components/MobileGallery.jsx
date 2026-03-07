@@ -322,7 +322,7 @@ export default function DesktopGallery() {
   };
   useGSAP(
     () => {
-      //if (!loaded) return;
+      if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
       gsap.set(img, { x: 0, y: 0, opacity: 1 });
 
@@ -352,7 +352,7 @@ export default function DesktopGallery() {
     },
     {
       scope: containerRef,
-      // dependencies: [loaded],
+      dependencies: [loaded],
     },
   );
   return (
@@ -363,32 +363,32 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      {/* {loaded && ( */}
-      <>
-        <button
-          ref={btnShuffleRef}
-          onClick={(e) => {
-            e.stopPropagation();
-            shuffle();
-          }}
-          className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
-        >
-          Lollo Gallery
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            Grid();
-          }}
-          className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
-        >
-          {btnGrid ? "Grid" : "Shuffle"}
-        </button>
-      </>
+      {loaded && (
+        <>
+          <button
+            ref={btnShuffleRef}
+            onClick={(e) => {
+              e.stopPropagation();
+              shuffle();
+            }}
+            className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
+          >
+            Lollo Gallery
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              Grid();
+            }}
+            className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
+          >
+            {btnGrid ? "Grid" : "Shuffle"}
+          </button>
+        </>
+      )}
 
-      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
-      {
-        //loaded &&
+      {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
+      {loaded &&
         gallery.map((e, i) => {
           return (
             <div
@@ -415,8 +415,7 @@ export default function DesktopGallery() {
               </div>
             </div>
           );
-        })
-      }
+        })}
       <div
         ref={ModalRef}
         onClick={() => {
