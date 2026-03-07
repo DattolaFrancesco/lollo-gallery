@@ -30,7 +30,7 @@
   width: 25vw;
 }
 .scaleModalVerticalMobile {
-  width: 75vw;
+  width: 65vw;
 }
 .imgChange {
   will-change: transform, opacity;

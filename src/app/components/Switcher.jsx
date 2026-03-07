@@ -15,6 +15,6 @@ export default function Switcher() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  if (isMobile === null) return <h1 className="text-white">loading...</h1>;
+  if (isMobile === null) return;
   return isMobile ? <MobileGallery /> : <DesktopGallery />;
 }

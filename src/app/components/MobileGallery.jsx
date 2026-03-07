@@ -182,13 +182,15 @@ export default function DesktopGallery() {
   const btnShuffleRef = useRef(null);
   const dragRef = useRef([]);
   const ModalRef = useRef(null);
-  const [activeImage, setActiveImage] = useState(0);
-  // const [activeImageRatio, setActiveImageRatio] = useState(null);
   const [btnGrid, setBtnGrid] = useState("Grid");
   const [loaded, setLoaded] = useState(false);
   const gridedRef = useRef(false);
-  const [lastClicked, setLastClicked] = useState(null);
-  const [lastClickedDescription, setLastClickedDescription] = useState(null);
+  // last photo clicked
+  const lastClickedRef = useRef(null);
+  // last photo description clicked
+  const lastClickedDescriptionRef = useRef(null);
+  // modal img active that can mount the component every time that change
+  const [activeImage, setActiveImage] = useState(0);
   const loadImage = (src) => {
     return new Promise((resolve, reject) => {
       const img = new window.Image();
@@ -221,8 +223,13 @@ export default function DesktopGallery() {
     if (direction > 0.5) return n;
     else return -n;
   };
+  const randomPosition = (e) => {
+    gsap.to(e, {
+      x: () => `${randomNumber()}vw`,
+      y: () => `${randomNumber()}vh`,
+    });
+  };
   const openModal = (e) => {
-    // setActiveImageRatio(e.dataset.ratio);
     setActiveImage(parseInt(e.dataset.number));
     const modal = ModalRef.current;
     modal.classList.remove("hidden");
@@ -245,8 +252,33 @@ export default function DesktopGallery() {
         y: () => `${randomNumber()}vh`,
       });
     });
-    setLastClicked(null);
-    setLastClickedDescription(null);
+    lastClickedRef.current = null;
+    lastClickedDescriptionRef.current = null;
+  };
+  const openImg = (e) => {
+    // put the last clicked photo in a random position
+    randomPosition(lastClickedRef.current);
+    // current foto as lasct clicked photo ready for the switch
+    lastClickedRef.current = e;
+    // centered
+    gsap.to(e, {
+      x: 0,
+      y: 0,
+    });
+    // scaled for a bigger photo
+    e.classList.add("w-[80vw]");
+    // get the current photo description
+    const description = e.querySelector("div");
+    // removed previus description
+    if (lastClickedDescriptionRef.current) lastClickedDescriptionRef.current.classList.add("hidden");
+    // added current description
+    lastClickedDescriptionRef.current = description;
+    // description showed
+    description.classList.remove("hidden");
+    // active index img
+    setActiveImage(parseInt(e.dataset.number));
+    // open modal if the grid btn is pressed
+    if (gridedRef.current) return openModal(e);
   };
   const Grid = () => {
     gridedRef.current = !gridedRef.current;
@@ -262,8 +294,8 @@ export default function DesktopGallery() {
     container.classList.toggle("shuffle");
     container.classList.toggle("columns-2");
     container.classList.toggle("gap-0");
-    setLastClicked(null);
-    setLastClickedDescription(null);
+    lastClickedRef.current = null;
+    lastClickedDescriptionRef.current = null;
     images.forEach((e) => {
       gsap.to(e, { scale: 1 });
       e.classList.toggle("gridCustom");
@@ -282,13 +314,11 @@ export default function DesktopGallery() {
     images.forEach((e) => {
       e.classList.remove("w-[80vw]");
     });
-    gsap.to(lastClicked, {
-      x: () => `${randomNumber()}vw`,
-      y: () => `${randomNumber()}vh`,
-    });
-    lastClickedDescription.classList.add("hidden");
-    setLastClicked(null);
-    setLastClickedDescription(null);
+    randomPosition(lastClickedRef.current);
+    // removed previus description
+    if (lastClickedDescriptionRef.current) lastClickedDescriptionRef.current.classList.add("hidden");
+    lastClickedRef.current = null;
+    lastClickedDescriptionRef.current = null;
   };
   useGSAP(
     () => {
@@ -313,6 +343,10 @@ export default function DesktopGallery() {
           img.forEach((el) => {
             el.classList.remove("w-[80vw]");
           });
+          // call a function to scale and center the img
+          openImg(this.target);
+          // stop click propagation
+          this.target.stopPropagation();
         },
       });
     },
@@ -329,25 +363,31 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      <button
-        ref={btnShuffleRef}
-        onClick={(e) => {
-          e.stopPropagation();
-          shuffle();
-        }}
-        className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
-      >
-        Lollo Gallery
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          Grid();
-        }}
-        className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
-      >
-        {btnGrid ? "Grid" : "Shuffle"}
-      </button>
+      {loaded && (
+        <>
+          {" "}
+          <button
+            ref={btnShuffleRef}
+            onClick={(e) => {
+              e.stopPropagation();
+              shuffle();
+            }}
+            className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-[5vh] z-9999"
+          >
+            Lollo Gallery
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              Grid();
+            }}
+            className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
+          >
+            {btnGrid ? "Grid" : "Shuffle"}
+          </button>
+        </>
+      )}
+
       {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>}
       {loaded &&
         gallery.map((e, i) => {
@@ -358,31 +398,14 @@ export default function DesktopGallery() {
               data-ratio={e.includes("v") ? "vertical" : undefined}
               className=" imgs absolute w-[30vw] opacity-0"
               onClick={(e) => {
-                setActiveImage(parseInt(e.currentTarget.dataset.number));
-                if (gridedRef.current) return openModal(e.currentTarget);
-                setLastClicked(e.currentTarget);
-                e.stopPropagation();
-                gsap.to(e.currentTarget, {
-                  x: 0,
-                  y: 0,
-                });
-                e.currentTarget.classList.add("w-[80vw]");
-                gsap.to(lastClicked, {
-                  x: () => `${randomNumber()}vw`,
-                  y: () => `${randomNumber()}vh`,
-                });
-                const description = e.currentTarget.querySelector("div");
-
-                setLastClickedDescription(description);
-                description.classList.remove("hidden");
-                lastClickedDescription.classList.add("hidden");
+                openModal(e.currentTarget);
               }}
             >
               <Image
                 src={e}
                 alt="foto"
-                width={300}
-                height={450}
+                width={450}
+                height={300}
                 placeholder="blur"
                 blurDataURL={galleryBlur[i]}
                 className="relative w-full will-change-[transform,opacity]"
@@ -405,10 +428,11 @@ export default function DesktopGallery() {
         <Image
           src={gallery[activeImage]}
           alt="foto"
-          width={800}
-          height={1200}
+          width={1200}
+          height={800}
           className={`relative scaleModalVerticalMobile`}
-          //  ${activeImageRatio ? "scaleModalVerticalMobile" : ""}
+          placeholder="blur"
+          blurDataURL={galleryBlur[activeImage]}
         />
         )<p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
