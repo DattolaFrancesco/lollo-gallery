@@ -38,3 +38,7 @@
 img {
   transition: opacity 0.5s ease-in-out;
 }
+p {
+  font-family: var(--font-switzer);
+  font-weight: 500;
+}

@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import Draggable from "gsap/dist/Draggable";
 import InertiaPlugin from "gsap/dist/InertiaPlugin";
 import { useEffect, useRef, useState } from "react";
+import RecallMemoryForm from "./RecallMemoryForm";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
@@ -65,60 +66,60 @@ const gallery = [
   "/gallery/54.jpg",
 ];
 const descriptionPhotos = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-  "23",
-  "24",
-  "25",
-  "26",
-  "27",
-  "28",
-  "29",
-  "30",
-  "31",
-  "32",
-  "33",
-  "34",
-  "35",
-  "36",
-  "37",
-  "38",
-  "39",
-  "40",
-  "41",
-  "42",
-  "43",
-  "44",
-  "45",
-  "46",
-  "47",
-  "48",
-  "49",
-  "50",
-  "51",
-  "52",
-  "53",
-  "54",
+  "ZOONTA BRESCIA NOV 2025",
+  "DODO BRESCIA NOV 2025",
+  "SUPER SILENCED BRESCIA OCT 2023",
+  "ERRORE BRESCIA NOV 2025",
+  "CARMINE IN FIORE JUL 2023",
+  "BARRA1 SOBRIO BERGAMO JUL 2025",
+  "SOTTOCASSA CARMINE SEP 2025",
+  "KOLPO DELLA SANTAGUERRILLA BRESCIA OCT 2025",
+  "UNDER SOUND CARMINE JUL 2024",
+  "OMEGA SAFARI BAGNOLO NOV 2022",
+  "MAURICIO FLIP OVER CASAZZA SET 2022",
+  "SPRITE VILLANUOVA SEP 2022",
+  "LIL GREEM RIFLESSO VILLANUOVA SEP 2022",
+  "DOYE TEX BRUGHERIO JAN 2025",
+  "SLIT TREE AMSTERDAM NOORD APR 2025",
+  "DIAGONALE CENTRO AMSTERDAM  APR 2025",
+  "DOUBLE EXP ON MY MIND AMSTERDAM NOORD APR 2025",
+  "PIRLO CAMPARI CARMINE APR 2024",
+  "STILL KIDS CAMERA DI COMMERCIO APR 2024",
+  "TIRO LUNGO CARMINE APR 2024",
+  "EDEN PULITO CARMINE APR 2024",
+  "CLICK & DOYE OCT 2025",
+  "PASTA E MANU LEMBRIO JUL 2023",
+  "PLAZATI AD ALBENGA JUL 2023",
+  "DOUBLE FRONT FLIP ALASSIO JUL 2023",
+  "A FUOCO GENOVA JUL 2023",
+  "FRANCY FIVE-0 EDEN AUG 2023 ",
+  "SESH CALDA FOSSA BAGNI AUG 2023",
+  "ALPACA AMSTERDAM NOORD APR 2025",
+  "KEBBY T-BAG BAGNOLO APR 2022",
+  "BOLO ARGENTO BOLOGNA OCT 2023",
+  "ROME STREETZ LOCOMOTIVE BOLOGNA OCT 2023",
+  "CHIAVE E MOSCHETTONE BRESCIA NOV 2024",
+  "SCORIA CUORE BRESCIA JUL 2024",
+  "UNNI CARMINE JAN 2026",
+  "BARABBA CARMINE JAN 2026",
+  "HEADPIECE BRESCIA JAN 2023",
+  "DUE PALAZZI BRESCIA AUG 2024",
+  "DUE LAMPIONI BRESCIA AUG 2024",
+  "TRIBE CARMINE NOV 2025",
+  "LIFFE BB OCT 2025",
+  "SANTAGUERILLA BB OCT 2025",
+  "CHAINED VILLANUOVA MAR 2023",
+  "SISTEMA MOTORIO CARMINE NOV 2025",
+  "JESUS PIECE BRESCIA NOV 2025",
+  "DOYE BRESCIA NOV 2025",
+  "OMEGA SAFARI BAGNOLO NOV 2022",
+  "NOTTE BALSAMICA CARMINE JUL 2024",
+  "GOVI COI GNARI GENOVA JUL 2023",
+  "LIFFE E BARRA TORINO NOV 2025",
+  "PASSAGGIO AMSTERDAM NOORD APR 2025",
+  "CASA DI VENTO AMSTERDAM NOORD APR 2025",
+  "SALOTTO BAGNOLO APR 2022",
+  "CARBONE AL DENTE BAGNOLO APR 2022",
 ];
 
 export default function DesktopGallery({ blurData }) {
@@ -267,7 +268,7 @@ export default function DesktopGallery({ blurData }) {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-black relative  shuffle "
+      className="w-screen min-h-screen bg-neutral-900 relative  shuffle "
       onClick={() => {
         clearScale();
       }}
@@ -278,9 +279,9 @@ export default function DesktopGallery({ blurData }) {
           e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer fixed bottom-[10vh] z-9999"
+        className="text-white  cursor-pointer fixed bottom-[5vh] z-9999"
       >
-        Lollo Gallery
+        <RecallMemoryForm className="w-48 h-auto" />
       </button>
       <button
         onClick={(e) => {
@@ -289,7 +290,7 @@ export default function DesktopGallery({ blurData }) {
         }}
         className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
       >
-        {btnGrid ? "Grid" : "Shuffle"}
+        {btnGrid ? "GRID" : "DISCOMPOSE"}
       </button>
       {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {gallery.map((e, i) => {
@@ -342,7 +343,7 @@ export default function DesktopGallery({ blurData }) {
               data-name={e.includes("v") ? "vertical" : undefined}
             />
             <div className=" hidden ">
-              <p className="text-white text-[0.4vw] bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+              <p className="text-white text-[0.4vw]  p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
             </div>
           </div>
         );
@@ -367,7 +368,7 @@ export default function DesktopGallery({ blurData }) {
             className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`}
           />
         )}
-        )<p className="text-white text-lg  bg-black/50 p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+        )<p className="text-white text-lg  px-2 pt-0 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
     </div>
   );
