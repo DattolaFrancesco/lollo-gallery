@@ -279,19 +279,23 @@ export default function DesktopGallery({ blurData }) {
           e.stopPropagation();
           shuffle();
         }}
-        className="text-white  cursor-pointer fixed bottom-[5vh] z-9999"
+        className="text-white  cursor-pointer fixed bottom-[2vh] z-9999"
       >
-        <RecallMemoryForm className="w-48 h-auto" />
+        <RecallMemoryForm className="w-40 h-auto" />
       </button>
       <button
         onClick={(e) => {
           e.stopPropagation();
           Grid();
         }}
-        className="text-white  cursor-pointer fixed top-[10vh] mx-[49%] z-9999"
+        className="text-white  cursor-pointer fixed top-[5vh] mx-[49%] z-9999"
       >
         {btnGrid ? "GRID" : "DISCOMPOSE"}
       </button>
+      <p className="text-white text-infoCustomDesktop  cursor-pointer fixed bottom-[6vh] left-[1vw] z-9999">
+        SHOT MADE BY LORENZO ACCORTI <br />
+        DEVELOPED BY FRANCESCO DATTOLA
+      </p>
       {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {gallery.map((e, i) => {
         return (
@@ -299,7 +303,7 @@ export default function DesktopGallery({ blurData }) {
             key={i}
             data-number={i}
             data-ratio={e.includes("v") ? "vertical" : undefined}
-            className=" imgs absolute w-[12vw] opacity-0"
+            className=" imgs absolute w-[10vw] opacity-0"
             onClick={(e) => {
               setActiveImage(parseInt(e.currentTarget.dataset.number));
               if (gridedRef.current) return openModal(e.currentTarget);

@@ -31,6 +31,7 @@
 }
 .scaleModalVerticalMobile {
   width: 65vw;
+  max-width: 20rem;
 }
 .imgChange {
   will-change: transform, opacity;
@@ -41,4 +42,53 @@ img {
 p {
   font-family: var(--font-switzer);
   font-weight: 500;
+}
+.customWidth {
+  width: 70vw;
+}
+.text-customMobile {
+  font-size: 3vw;
+}
+.text-infoCustom {
+  font-size: 1.5vw;
+}
+.text-infoCustomDesktop {
+  font-size: 0.6vw;
+}
+
+/* media query */
+@media (min-width: 567px) {
+  .customWidth {
+    width: 50vw;
+  }
+  .text-infoCustom {
+    font-size: 1.2vw;
+  }
+}
+@media (min-width: 768px) {
+  .customWidth {
+    width: 40vw;
+  }
+  .text-customMobile {
+    font-size: 2vw;
+  }
+  .text-infoCustom {
+    font-size: 1vw;
+  }
+}
+@media (min-width: 1024px) {
+  .customWidth {
+    width: 35vw;
+  }
+  .text-infoCustom {
+    font-size: 0.8vw;
+  }
+  .text-customMobile {
+    font-size: 1.5vw;
+  }
+}
+@media (min-width: 1600px) {
+  .text-infoCustomDesktop {
+    font-size: 0.5vw;
+  }
 }

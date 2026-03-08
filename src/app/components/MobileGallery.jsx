@@ -189,7 +189,7 @@ export default function DesktopGallery({ blurData }) {
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
-      e.classList.remove("w-[80vw]");
+      e.classList.remove("customWidth");
       const description = e.querySelector("div");
       if (description) description.classList.add("hidden");
       gsap.to(e, {
@@ -211,7 +211,7 @@ export default function DesktopGallery({ blurData }) {
       y: 0,
     });
     // scaled for a bigger photo
-    e.classList.add("w-[80vw]");
+    e.classList.add("customWidth");
     // get the current photo description
     const description = e.querySelector("div");
     // removed previus description
@@ -257,7 +257,7 @@ export default function DesktopGallery({ blurData }) {
   const clearScale = () => {
     const images = document.querySelectorAll(".imgs");
     images.forEach((e) => {
-      e.classList.remove("w-[80vw]");
+      e.classList.remove("customWidth");
     });
     randomPosition(lastClickedRef.current);
     // removed previus description
@@ -286,7 +286,7 @@ export default function DesktopGallery({ blurData }) {
         edgeResistance: 0.8,
         onClick() {
           img.forEach((el) => {
-            el.classList.remove("w-[80vw]");
+            el.classList.remove("customWidth");
           });
           // call a function to scale and center the img
           openImg(this.target);
@@ -318,17 +318,21 @@ export default function DesktopGallery({ blurData }) {
           }}
           className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-0 z-9999"
         >
-          <RecallMemoryForm className="w-48 h-auto" />
+          <RecallMemoryForm className="w-30 h-auto" />
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
             Grid();
           }}
-          className="text-white  cursor-pointer fixed top-[10vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
+          className="text-white  cursor-pointer fixed top-[5vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
         >
           {btnGrid ? "GRID" : "DISCOMPOSE"}
         </button>
+        <p className="text-white text-infoCustom  cursor-pointer fixed bottom-[-1vh] left-[50%] -translate-x-1/2 -translate-y-1/2 z-9999">
+          SHOT MADE BY LORENZO ACCORTI <br />
+          DEVELOPED BY FRANCESCO DATTOLA
+        </p>
       </>
 
       {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
@@ -340,7 +344,7 @@ export default function DesktopGallery({ blurData }) {
               key={i}
               data-number={i}
               data-ratio={e.includes("v") ? "vertical" : undefined}
-              className=" imgs absolute w-[30vw] opacity-0"
+              className=" imgs absolute w-[30vw] sm:w-[22vw] md:w-[20vw] lg:w-[15vw] opacity-0"
               onClick={(e) => {
                 openModal(e.currentTarget);
               }}
@@ -357,7 +361,7 @@ export default function DesktopGallery({ blurData }) {
                 data-name={e.includes("v") ? "vertical" : undefined}
               />
               <div className=" hidden ">
-                <p className="text-white text-[3vw]  p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+                <p className="text-white text-customMobile  p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
               </div>
             </div>
           );
