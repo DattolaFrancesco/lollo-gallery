@@ -385,7 +385,7 @@ export default function DesktopGallery({ blurData }) {
           blurDataURL={blurData[activeImage]}
           style={{ opacity: 1 }}
         />
-        )<p className="text-white text-lg p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+        )<p className="text-white text-customModalMobile p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
     </div>
   );
