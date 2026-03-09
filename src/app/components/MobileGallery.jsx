@@ -303,7 +303,7 @@ export default function DesktopGallery({ blurData }) {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-black relative  shuffle  "
+      className="w-screen min-h-[100svh] bg-black relative  shuffle  "
       onClick={() => {
         clearScale();
       }}
