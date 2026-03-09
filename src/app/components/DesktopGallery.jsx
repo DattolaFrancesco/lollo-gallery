@@ -293,7 +293,7 @@ export default function DesktopGallery({ blurData }) {
         {btnGrid ? "GRID" : "DISCOMPOSE"}
       </button>
       <p className="text-white text-infoCustomDesktop  cursor-pointer fixed bottom-[6vh] left-[1vw] z-9999">
-        SHOT MADE BY LORENZO ACCORTI <br />
+        PHOTOGRAPHY BY LORENZO ACCORTI <br />
         DEVELOPED BY FRANCESCO DATTOLA
       </p>
       {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
