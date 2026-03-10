@@ -330,8 +330,8 @@ export default function DesktopGallery({ blurData }) {
           {btnGrid ? "GRID" : "DISCOMPOSE"}
         </button>
         <p className="text-white text-infoCustom  cursor-pointer fixed bottom-[-1vh] left-[50%] -translate-x-1/2 -translate-y-1/2 z-9999">
-          PHOTOGRAPHY BY LORENZO ACCORTI <br />
-          DEVELOPED BY FRANCESCO DATTOLA
+          <a href="https://www.instagram.com/lollochef_/">PHOTOGRAPHY BY LORENZO ACCORTI</a> <br />
+          <a href="https://www.instagram.com/francescodattola_/">DEVELOPED BY FRANCESCO DATTOLA</a>
         </p>
       </>
 

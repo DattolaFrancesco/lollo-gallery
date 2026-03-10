@@ -295,8 +295,8 @@ export default function DesktopGallery({ blurData }) {
         {btnGrid ? "GRID" : "DISCOMPOSE"}
       </button>
       <p className="text-white text-infoCustomDesktop  cursor-pointer fixed bottom-[6vh] left-[1vw] z-9999">
-        PHOTOGRAPHY BY LORENZO ACCORTI <br />
-        DEVELOPED BY FRANCESCO DATTOLA
+        <a href="https://www.instagram.com/lollochef_/">PHOTOGRAPHY BY LORENZO ACCORTI</a> <br />
+        <a href="https://www.instagram.com/francescodattola_/">DEVELOPED BY FRANCESCO DATTOLA</a>
       </p>
       {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {gallery.map((e, i) => {
