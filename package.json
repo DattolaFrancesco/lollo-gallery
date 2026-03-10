@@ -15,11 +15,13 @@
     "next": "16.1.6",
     "plaiceholder": "^3.0.0",
     "react": "19.2.3",
+    "react-clock": "^6.0.0",
     "react-dom": "19.2.3",
     "react-responsive": "^10.0.1",
     "sharp": "^0.34.5"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",

@@ -6,6 +6,8 @@ import Draggable from "gsap/dist/Draggable";
 import InertiaPlugin from "gsap/dist/InertiaPlugin";
 import { useEffect, useRef, useState } from "react";
 import RecallMemoryForm from "./RecallMemoryForm";
+import Clock from "react-clock";
+import "react-clock/dist/Clock.css";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
@@ -124,12 +126,18 @@ const descriptionPhotos = [
 
 export default function DesktopGallery({ blurData }) {
   const containerRef = useRef(null);
+  // menu
+  const menuRef = useRef(null);
+  // btn shuffle alto
   const btnShuffleRef = useRef(null);
+  // btn grid alto
+  const btnGridRef = useRef(null);
+  // modale
   const ModalRef = useRef(null);
+  // tempo orologio
+  const [clockValue, setClockValue] = useState(new Date());
   const [activeImage, setActiveImage] = useState(null);
   const [activeImageRatio, setActiveImageRatio] = useState(null);
-  const [btnGrid, setBtnGrid] = useState("Grid");
-  const [loaded, setLoaded] = useState(false);
   const gridedRef = useRef(false);
   const [lastClicked, setLastClicked] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
@@ -195,23 +203,24 @@ export default function DesktopGallery({ blurData }) {
     setLastClickedDescription(null);
   };
   const Grid = () => {
+    closeModal();
     gridedRef.current = !gridedRef.current;
     const images = document.querySelectorAll(".imgs");
     const container = containerRef.current;
-    const btnShuffle = btnShuffleRef.current;
     const Body = document.querySelector("body");
-    setBtnGrid(!btnGrid);
-    Body.classList.toggle("overflow-x-hidden");
-    btnShuffle.classList.toggle("hidden");
+    Body.classList.add("overflow-x-hidden");
+    btnGridRef.current.classList.toggle("activeBtn");
+    btnShuffleRef.current.classList.toggle("activeBtn");
     container.classList.toggle("shuffle");
     container.classList.toggle("columns-8");
     container.classList.toggle("gap-0");
+    // menuRef.current.classList.toggle("centeredMenu");
     setLastClicked(null);
     setLastClickedDescription(null);
     images.forEach((e) => {
       gsap.to(e, { scale: 1 });
       e.classList.toggle("gridCustom");
-      e.classList.add("transitionCustom");
+      e.classList.toggle("transitionCustom");
       const description = e.querySelector("div");
       if (description) description.classList.add("hidden");
     });
@@ -267,37 +276,123 @@ export default function DesktopGallery({ blurData }) {
       //dependencies: [loaded],
     },
   );
+  // orologio
+  useEffect(() => {
+    const interval = setInterval(() => setClockValue(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-neutral-900 relative  shuffle "
+      className="w-screen min-h-screen bg-black relative  shuffle "
       onClick={() => {
         clearScale();
       }}
     >
-      <button
-        ref={btnShuffleRef}
-        onClick={(e) => {
-          e.stopPropagation();
-          shuffle();
-        }}
-        className="text-white  cursor-pointer fixed bottom-[2vh] z-9999"
-      >
-        <RecallMemoryForm className="w-40 h-auto" />
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          Grid();
-        }}
-        className="text-white  cursor-pointer fixed top-[5vh] mx-[49%] z-9999"
-      >
-        {btnGrid ? "GRID" : "DISCOMPOSE"}
-      </button>
-      <p className="text-white text-infoCustomDesktop  cursor-pointer fixed bottom-[6vh] left-[1vw] z-9999">
-        <a href="https://www.instagram.com/lollochef_/">PHOTOGRAPHY BY LORENZO ACCORTI</a> <br />
-        <a href="https://www.instagram.com/francescodattola_/">DEVELOPED BY FRANCESCO DATTOLA</a>
-      </p>
+      <div ref={menuRef} className=" flex gap-0.5  absolute left-0  top-[0] m-2 w-[600] min-h-[60] z-999999999999 fixed top-0 generic1sTransition">
+        {/* logo */}
+        <div className=" w-[15%] bg-white flex justify-center items-center">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (gridedRef.current) Grid();
+            }}
+            className="cursor-pointer"
+          >
+            <RecallMemoryForm className="w-full h-auto p-1" />
+          </button>
+        </div>
+        {/* fine logo */}
+        {/* inizio btn */}
+        <div className=" w-[35%] flex flex-col gap-0.5 ">
+          <div className="flex justify-between bg-white">
+            <p className="text-xs p-1">Visualization</p>
+            <div className="flex p-1.5">
+              <button
+                ref={btnShuffleRef}
+                onClick={() => {
+                  Grid();
+                }}
+                className="text-xs text-white bg-gray-200 p-1 activeBtn cursor-pointer"
+              >
+                Shuffle
+              </button>
+              <button
+                ref={btnGridRef}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  Grid();
+                }}
+                className="text-xs text-white bg-gray-200 p-1 cursor-pointer"
+              >
+                Grid
+              </button>
+            </div>
+          </div>
+          <div className="bg-white">
+            <a href="https://www.instagram.com/lollochef_/">
+              <p className="text-xs px-1">Archive by Lorenzo Accorti</p>
+            </a>
+          </div>
+          <div className="bg-white">
+            <a href="https://www.instagram.com/francescodattola_/">
+              <p className="text-xs px-1">Developed by Francesco Dattola</p>
+            </a>
+          </div>
+        </div>
+        {/* fine btn */}
+        {/* inizio shuffle */}
+        <div className="bg-white w-[5%] flex items-center justify-center flex-col">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (gridedRef.current) Grid();
+              else shuffle();
+            }}
+            className="-rotate-90 p-1"
+          >
+            <p className="text-sm text-nowrap cursor-pointer">Shuffle &nbsp;● </p>
+          </button>
+        </div>
+        {/* fine shuffle */}
+        {/* inizio descrizione */}
+        <div className="w-[30%] bg-white">
+          <p className="text-xs p-1">Lorenzo Accorti discomposed archive, to recall memory form. Lorenzo Accorti discomposed archive, to recall memory form.</p>
+        </div>
+        {/* fine descrizione */}
+        <div className="bg-white p-1">
+          <Clock
+            value={clockValue}
+            size={65} // dimensione in px o stringa "50vw"
+            // lancette
+            hourHandLength={45} // lunghezza lancetta ore (%)
+            hourHandWidth={2} // spessore (px)
+            minuteHandLength={70}
+            minuteHandWidth={2}
+            secondHandLength={90}
+            secondHandWidth={1}
+            // parte opposta delle lancette
+            hourHandOppositeLength={10}
+            minuteHandOppositeLength={10}
+            secondHandOppositeLength={10}
+            // tacche
+            hourMarksLength={10}
+            hourMarksWidth={3}
+            minuteMarksLength={6}
+            minuteMarksWidth={1}
+            // toggle elementi
+            renderNumbers={false} // mostra/nascondi numeri
+            renderMinuteHand={true}
+            renderSecondHand={true}
+            renderHourMarks={true}
+            renderMinuteMarks={true}
+            // altro
+            locale="it-IT"
+            useMillisecondPrecision={false}
+            className="my-clock"
+          />
+        </div>
+      </div>
       {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {gallery.map((e, i) => {
         return (

@@ -58,7 +58,19 @@ p {
 .text-customModalMobile {
   font-size: 3.5vw;
 }
-
+.activeBtn {
+  background-color: rgb(190, 190, 190);
+}
+.my-clock {
+  background-color: rgb(190, 190, 190);
+  border-radius: 50%;
+}
+.centeredMenu {
+  top: 90%;
+}
+.generic1sTransition {
+  transition: all 1s;
+}
 /* media query */
 @media (min-width: 567px) {
   .customWidth {
