@@ -318,7 +318,7 @@ export default function DesktopGallery({ blurData }) {
           }}
           className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-0 z-9999"
         >
-          <RecallMemoryForm className="w-30 h-auto" />
+          <RecallMemoryForm className="w-40 h-auto" />
         </button>
         <button
           onClick={(e) => {
