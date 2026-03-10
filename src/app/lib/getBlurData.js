@@ -6,7 +6,7 @@ export async function getAllBlurData(images) {
   const blurData = await Promise.all(
     images.map(async (src) => {
       const file = fs.readFileSync(path.join(process.cwd(), "public", src));
-      const { base64 } = await getPlaiceholder(file);
+      const { base64 } = await getPlaiceholder(file, { size: 32 });
       return base64;
     }),
   );
