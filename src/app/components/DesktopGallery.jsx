@@ -169,7 +169,9 @@ export default function DesktopGallery({ blurData }) {
     setActiveImageRatio(e.dataset.ratio);
     setActiveImage(parseInt(e.dataset.number));
     const modal = ModalRef.current;
-    modal.classList.remove("hidden");
+    setTimeout(() => {
+      modal.classList.remove("hidden");
+    }, 150);
     modal.classList.add("flex");
     modal.classList.add("flex-col");
   };
