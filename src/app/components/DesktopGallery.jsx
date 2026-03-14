@@ -298,14 +298,14 @@ export default function DesktopGallery({ blurData }) {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-black relative  shuffle "
+      className="w-screen min-h-screen bg-black relative  shuffle pb-[100] "
       onClick={() => {
         clearScale();
       }}
     >
       <div
         ref={menuRef}
-        className=" flex gap-0.5  absolute left-[50%]  top-[5%] -translate-1/2 m-2 w-[600] min-h-[60] z-999999999999 fixed top-0 generic1sTransition"
+        className=" flex gap-0.5  absolute left-[50%]  top-[90%] -translate-1/2 m-2 w-[600] min-h-[60] z-999999999999 fixed top-0 generic1sTransition"
       >
         {/* logo */}
         <div className=" w-[15%] bg-white flex justify-center items-center">
@@ -363,7 +363,8 @@ export default function DesktopGallery({ blurData }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              if (gridedRef.current) mixArray(gallery, descriptionPhotos);
+              if (gridedRef.current)
+                Grid(); //mixArray(gallery, descriptionPhotos);
               else shuffle();
             }}
             className="-rotate-90 p-1"
@@ -432,7 +433,7 @@ export default function DesktopGallery({ blurData }) {
                 });
               } else {
                 gsap.to(e.currentTarget, {
-                  scale: 3,
+                  scale: 4,
                   x: 0,
                   y: 0,
                 });
@@ -461,7 +462,7 @@ export default function DesktopGallery({ blurData }) {
               data-name={e.includes("v") ? "vertical" : undefined}
             />
             <div className=" hidden ">
-              <p className={`text-white ${e.includes("v") ? "text-[0.6vw]" : "text-[0.4vw]"}   p-2 text-center font-thin tracking-tight`}>
+              <p className={`text-white ${e.includes("v") ? "text-[0.8vw]" : "text-[0.4vw]"}   p-2 text-center font-thin tracking-tight`}>
                 {descriptionPhotos[activeImage]}
                 {}
               </p>
@@ -474,7 +475,7 @@ export default function DesktopGallery({ blurData }) {
         onClick={() => {
           closeModal();
         }}
-        className="fixed inset-0 bg-black/50 hidden items-center justify-center z-9999999"
+        className="fixed inset-0 bg-black/50 hidden items-center justify-start z-9999999"
       >
         (
         {activeImage !== null && (
