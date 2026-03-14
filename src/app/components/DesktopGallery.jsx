@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import RecallMemoryForm from "./RecallMemoryForm";
 import Clock from "react-clock";
 import "react-clock/dist/Clock.css";
+import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
@@ -124,7 +125,8 @@ const descriptionPhotos = [
   "CARBONE AL DENTE BAGNOLO APR 2022",
 ];
 
-export default function DesktopGallery({ blurData }) {
+export default function DesktopGallery() {
+  const router = useRouter();
   const containerRef = useRef(null);
   // menu
   const menuRef = useRef(null);
@@ -141,29 +143,7 @@ export default function DesktopGallery({ blurData }) {
   const gridedRef = useRef(false);
   const [lastClicked, setLastClicked] = useState(null);
   const [lastClickedDescription, setLastClickedDescription] = useState(null);
-  const loadImage = (src) => {
-    return new Promise((resolve, reject) => {
-      const img = new window.Image();
-      img.src = src;
-      img.onload = () => {
-        resolve(src);
-        console.log("img caricata");
-      };
-      img.onerror = () => reject(src);
-    });
-  };
-  const preloadImages = async (images) => {
-    const promises = images.map((src) => loadImage(src));
-    await Promise.all(promises);
-  };
-  useEffect(() => {
-    const init = async () => {
-      await preloadImages(gallery);
-      setLoaded(true);
-    };
 
-    init();
-  }, []);
   const mixArray = (arr1, arr2) => {
     closeModal();
     for (let i = arr1.length - 1; i > 0; i--) {
@@ -261,13 +241,12 @@ export default function DesktopGallery({ blurData }) {
     () => {
       //if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
-      gsap.set(img, { x: 0, y: 0, opacity: 1 });
+      gsap.set(img, { x: 0, y: 0 });
 
       gsap.to(img, {
         duration: 1.2,
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
-        stagger: 0.09,
         ease: "power1.out",
       });
 
@@ -287,7 +266,6 @@ export default function DesktopGallery({ blurData }) {
     },
     {
       scope: containerRef,
-      //dependencies: [loaded],
     },
   );
   // orologio
@@ -312,7 +290,7 @@ export default function DesktopGallery({ blurData }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              if (gridedRef.current) Grid();
+              router.push("/");
             }}
             className="cursor-pointer"
           >
@@ -411,14 +389,13 @@ export default function DesktopGallery({ blurData }) {
           />
         </div>
       </div>
-      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {gallery.map((e, i) => {
         return (
           <div
             key={e}
             data-number={i}
             data-ratio={e.includes("v") ? "vertical" : undefined}
-            className=" imgs absolute w-[10vw] opacity-0 "
+            className=" imgs absolute w-[10vw] "
             onClick={(e) => {
               setActiveImage(parseInt(e.currentTarget.dataset.number));
               if (gridedRef.current) return openModal(e.currentTarget);
@@ -453,13 +430,12 @@ export default function DesktopGallery({ blurData }) {
             <Image
               src={e}
               alt="foto"
-              width={1200}
-              height={800}
-              placeholder="blur"
-              blurDataURL={blurData[i]}
-              className="relative"
-              style={{ opacity: 1 }}
+              width={400}
+              height={300}
+              className="relative opacity-0 transition-opacity duration-200"
+              loading={i < 6 ? "eager" : "lazy"}
               data-name={e.includes("v") ? "vertical" : undefined}
+              onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
             />
             <div className=" hidden ">
               <p className={`text-white ${e.includes("v") ? "text-[0.8vw]" : "text-[0.4vw]"}   p-2 text-center font-thin tracking-tight`}>
@@ -479,16 +455,7 @@ export default function DesktopGallery({ blurData }) {
       >
         (
         {activeImage !== null && (
-          <Image
-            src={gallery[activeImage]}
-            alt="foto"
-            width={800}
-            height={1200}
-            placeholder="blur"
-            blurDataURL={blurData[activeImage]}
-            style={{ opacity: 1 }}
-            className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`}
-          />
+          <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`} />
         )}
         )<p className="text-white text-lg  px-2 pt-0 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>

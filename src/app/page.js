@@ -1,17 +1,18 @@
-import Switcher from "./components/Switcher";
-import { getAllBlurData } from "./lib/getBlurData";
-
+"use client";
+import styles from "./page.css";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import RecallMemoryFormWhite from "./components/RecallMemoryFormWhite";
 const gallery = [
   "/gallery/1.jpg",
-  "/gallery/2v.jpg",
   "/gallery/3.jpg",
   "/gallery/4.jpg",
   "/gallery/5.jpg",
   "/gallery/6.jpg",
-  "/gallery/7v.jpg",
   "/gallery/8.jpg",
   "/gallery/9.jpg",
-  "/gallery/10v.jpg",
   "/gallery/11.jpg",
   "/gallery/12.jpg",
   "/gallery/13.jpg",
@@ -22,25 +23,6 @@ const gallery = [
   "/gallery/18.jpg",
   "/gallery/19.jpg",
   "/gallery/20.jpg",
-  "/gallery/21.jpg",
-  "/gallery/22.jpg",
-  "/gallery/23.jpg",
-  "/gallery/24v.jpg",
-  "/gallery/25.jpg",
-  "/gallery/26.jpg",
-  "/gallery/27v.jpg",
-  "/gallery/28v.jpg",
-  "/gallery/29.jpg",
-  "/gallery/30.jpg",
-  "/gallery/31.jpg",
-  "/gallery/32.jpg",
-  "/gallery/33v.webp",
-  "/gallery/34v.webp",
-  "/gallery/35v.webp",
-  "/gallery/36.webp",
-  "/gallery/37.webp",
-  "/gallery/38.webp",
-  "/gallery/39.webp",
   "/gallery/40.webp",
   "/gallery/41.webp",
   "/gallery/42.webp",
@@ -54,15 +36,46 @@ const gallery = [
   "/gallery/50.jpg",
   "/gallery/51.jpg",
   "/gallery/52.jpg",
-  "/gallery/53.jpg",
-  "/gallery/54.jpg",
 ];
+export default function Default() {
+  const router = useRouter();
+  useGSAP(() => {
+    const blocks = document.querySelectorAll(".block");
+    gsap.from(".block", 5, {
+      scale: 0,
+      opacity: 0.3,
+      x: "50%",
+      y: "50%",
+      z: -200,
+      stagger: {
+        each: 0.25,
+        repeat: -1,
+        repeatDelay: 0.075 * (blocks.length - 1),
+      },
+    });
+  });
 
-export default async function Home() {
-  const blurData = await getAllBlurData(gallery);
   return (
     <>
-      <Switcher blurData={blurData} />
+      <div className="gallery flex flex-col justify-center items-center">
+        <RecallMemoryFormWhite width="35vw" height="50vh" className="max-h-[450px] z-999" />
+        <button
+          className="mt-2 px-2 bg-white hover:bg-gray-300 cursor-pointer z-[999]"
+          onClick={() => {
+            console.log("ciao");
+            router.push("/gallery");
+          }}
+        >
+          Show Gallery
+        </button>
+        {gallery.map((e, i) => {
+          return (
+            <div key={e} className={`block block-${i}`}>
+              <Image src={e} alt="foto" width={800} height={600} />
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }

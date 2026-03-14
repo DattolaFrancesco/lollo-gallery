@@ -1,0 +1,134 @@
+.gallery {
+  position: absolute;
+  width: 100vw;
+  height: 100svh;
+  perspective: 2000px;
+}
+.block {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  background-color: rgba(109, 109, 109, 0.267);
+  transform-style: preserve-3d;
+  transform: translateZ(1750px);
+}
+.block-0 {
+  top: 30%;
+  left: 55%;
+}
+.block-1 {
+  top: 20%;
+  left: 25%;
+}
+.block-2 {
+  top: 50%;
+  left: 10%;
+}
+.block-3 {
+  top: 60%;
+  left: 40%;
+}
+.block-4 {
+  top: 30%;
+  left: 30%;
+}
+.block-5 {
+  top: 60%;
+  left: 60%;
+}
+.block-6 {
+  top: 20%;
+  left: 50%;
+}
+.block-7 {
+  top: 60%;
+  left: 10%;
+}
+.block-8 {
+  top: 20%;
+  left: 40%;
+}
+.block-9 {
+  top: 40%;
+  left: 60%;
+}
+.block-10 {
+  top: 60%;
+  left: 25%;
+}
+.block-11 {
+  top: 20%;
+  left: 55%;
+}
+.block-12 {
+  top: 60%;
+  left: 50%;
+}
+.block-13 {
+  top: 60%;
+  left: 25%;
+}
+.block-14 {
+  top: 25%;
+  left: 25%;
+}
+.block-15 {
+  top: 50%;
+  left: 10%;
+}
+.block-16 {
+  top: 60%;
+  left: 40%;
+}
+.block-17 {
+  top: 20%;
+  left: 40%;
+}
+.block-18 {
+  top: 30%;
+  left: 60%;
+}
+.block-19 {
+  top: 50%;
+  left: 25%;
+}
+.block-20 {
+  top: 40%;
+  left: 20%;
+}
+.block-21 {
+  top: 60%;
+  left: 60%;
+}
+.block-22 {
+  top: 30%;
+  left: 60%;
+}
+.block-23 {
+  top: 80%;
+  left: 60%;
+}
+.block-24 {
+  top: 20%;
+  left: 20%;
+}
+.block-25 {
+  top: 40%;
+  left: 80%;
+}
+.block-26 {
+  top: 20%;
+  left: 60%;
+}
+.block-27 {
+  top: 70%;
+  left: 20%;
+}
+.block-28 {
+  top: 30%;
+  left: 20%;
+}
+.block-29 {
+  top: 50%;
+  left: 20%;
+}
