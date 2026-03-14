@@ -164,6 +164,19 @@ export default function DesktopGallery({ blurData }) {
 
     init();
   }, []);
+  const mixArray = (arr1, arr2) => {
+    closeModal();
+    Grid();
+    const images = document.querySelectorAll(".imgs");
+    for (let i = arr1.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr1[i], arr1[j]] = [arr1[j], arr1[i]];
+      [arr2[i], arr2[j]] = [arr2[j], arr2[i]];
+    }
+    setTimeout(() => {
+      Grid();
+    }, 1200);
+  };
   const randomNumber = () => {
     let n = Math.floor(Math.random() * 37);
     let direction = Math.random();
@@ -289,7 +302,10 @@ export default function DesktopGallery({ blurData }) {
         clearScale();
       }}
     >
-      <div ref={menuRef} className=" flex gap-0.5  absolute left-0  top-[0] m-2 w-[600] min-h-[60] z-999999999999 fixed top-0 generic1sTransition">
+      <div
+        ref={menuRef}
+        className=" flex gap-0.5  absolute left-[50%]  top-[5%] -translate-1/2 m-2 w-[600] min-h-[60] z-999999999999 fixed top-0 generic1sTransition"
+      >
         {/* logo */}
         <div className=" w-[15%] bg-white flex justify-center items-center">
           <button
@@ -346,7 +362,7 @@ export default function DesktopGallery({ blurData }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              if (gridedRef.current) Grid();
+              if (gridedRef.current) mixArray(gallery, descriptionPhotos);
               else shuffle();
             }}
             className="-rotate-90 p-1"
@@ -400,7 +416,7 @@ export default function DesktopGallery({ blurData }) {
             key={i}
             data-number={i}
             data-ratio={e.includes("v") ? "vertical" : undefined}
-            className=" imgs absolute w-[10vw] opacity-0"
+            className=" imgs absolute w-[10vw] opacity-0 "
             onClick={(e) => {
               setActiveImage(parseInt(e.currentTarget.dataset.number));
               if (gridedRef.current) return openModal(e.currentTarget);
@@ -444,7 +460,10 @@ export default function DesktopGallery({ blurData }) {
               data-name={e.includes("v") ? "vertical" : undefined}
             />
             <div className=" hidden ">
-              <p className="text-white text-[0.4vw]  p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
+              <p className={`text-white ${e.includes("v") ? "text-[0.6vw]" : "text-[0.4vw]"}   p-2 text-center font-thin tracking-tight`}>
+                {descriptionPhotos[activeImage]}
+                {}
+              </p>
             </div>
           </div>
         );
