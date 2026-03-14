@@ -166,25 +166,26 @@ export default function DesktopGallery({ blurData }) {
   }, []);
   const mixArray = (arr1, arr2) => {
     closeModal();
-    Grid();
-    const images = document.querySelectorAll(".imgs");
     for (let i = arr1.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr1[i], arr1[j]] = [arr1[j], arr1[i]];
       [arr2[i], arr2[j]] = [arr2[j], arr2[i]];
     }
-    setTimeout(() => {
-      Grid();
-    }, 1200);
   };
   const randomNumber = () => {
-    let n = Math.floor(Math.random() * 37);
-    let direction = Math.random();
-    while (n < 7) {
-      n = Math.floor(Math.random() * 37);
+    const zone = Math.random();
+
+    if (zone < 0.3) {
+      // 30% delle immagini vicino al centro
+      const n = Math.random() * 12; // 0-8
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      return n * direction;
+    } else {
+      // 70% distribuite nel resto della pagina
+      const n = 12 + Math.random() * 30; // 12-32
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      return n * direction;
     }
-    if (direction > 0.5) return n;
-    else return -n;
   };
   const openModal = (e) => {
     setActiveImageRatio(e.dataset.ratio);
@@ -413,7 +414,7 @@ export default function DesktopGallery({ blurData }) {
       {gallery.map((e, i) => {
         return (
           <div
-            key={i}
+            key={e}
             data-number={i}
             data-ratio={e.includes("v") ? "vertical" : undefined}
             className=" imgs absolute w-[10vw] opacity-0 "
