@@ -297,6 +297,8 @@ export default function DesktopGallery() {
   const openImg = (e) => {
     // check if its in the grid setup
     if (gridedRef.current) return;
+    // checking if the same photo is clicked
+    if (e === lastClickedRef.current) return clearScale();
     // put the last clicked photo in a random position
     if (lastClickedRef.current) {
       randomPosition(lastClickedRef.current);
