@@ -26,8 +26,11 @@
   align-items: center;
   overflow: hidden;
 }
+.scaleModal {
+  width: 35vw;
+}
 .scaleModalVertical {
-  width: 25vw;
+  width: 23vw;
 }
 .scaleModalVerticalMobile {
   width: 65vw;
@@ -45,6 +48,14 @@ p {
 }
 .customWidth {
   width: 70vw;
+}
+.customWidthDesktop {
+  width: 45vw;
+  max-width: 60rem;
+}
+.customWidthDesktopVertical {
+  width: 25vw;
+  max-width: 30rem;
 }
 .text-customMobile {
   font-size: 3vw;

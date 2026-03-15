@@ -124,7 +124,42 @@ const descriptionPhotos = [
   "SALOTTO BAGNOLO APR 2022",
   "CARBONE AL DENTE BAGNOLO APR 2022",
 ];
+function LiveClock() {
+  const [clockValue, setClockValue] = useState(new Date());
 
+  useEffect(() => {
+    const interval = setInterval(() => setClockValue(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <Clock
+      value={clockValue}
+      size={65}
+      hourHandLength={45}
+      hourHandWidth={2}
+      minuteHandLength={70}
+      minuteHandWidth={2}
+      secondHandLength={90}
+      secondHandWidth={1}
+      hourHandOppositeLength={10}
+      minuteHandOppositeLength={10}
+      secondHandOppositeLength={10}
+      hourMarksLength={10}
+      hourMarksWidth={3}
+      minuteMarksLength={6}
+      minuteMarksWidth={1}
+      renderNumbers={false}
+      renderMinuteHand={true}
+      renderSecondHand={true}
+      renderHourMarks={true}
+      renderMinuteMarks={true}
+      locale="it-IT"
+      useMillisecondPrecision={false}
+      className="my-clock"
+    />
+  );
+}
 export default function DesktopGallery() {
   const router = useRouter();
   const containerRef = useRef(null);
@@ -137,13 +172,15 @@ export default function DesktopGallery() {
   // modale
   const ModalRef = useRef(null);
   // tempo orologio
-  const [clockValue, setClockValue] = useState(new Date());
-  const [activeImage, setActiveImage] = useState(null);
+  // last photo clicked
+  const lastClickedRef = useRef(null);
+  // last photo description clicked
+  const lastClickedDescriptionRef = useRef(null);
+  // modal img active that can mount the component every time that change
+  const [activeImage, setActiveImage] = useState(0);
+  // img ratio
   const [activeImageRatio, setActiveImageRatio] = useState(null);
   const gridedRef = useRef(false);
-  const [lastClicked, setLastClicked] = useState(null);
-  const [lastClickedDescription, setLastClickedDescription] = useState(null);
-
   const mixArray = (arr1, arr2) => {
     closeModal();
     for (let i = arr1.length - 1; i > 0; i--) {
@@ -167,7 +204,20 @@ export default function DesktopGallery() {
       return n * direction;
     }
   };
+  const randomPosition = (e) => {
+    gsap.to(e, {
+      x: () => `${randomNumber()}vw`,
+      y: () => `${randomNumber()}vh`,
+    });
+  };
   const openModal = (e) => {
+    if (e.dataset.ratio) {
+      ModalRef.current.classList.add("justify-start");
+      ModalRef.current.classList.remove("justify-center");
+    } else {
+      ModalRef.current.classList.remove("justify-start");
+      ModalRef.current.classList.add("justify-center");
+    }
     setActiveImageRatio(e.dataset.ratio);
     setActiveImage(parseInt(e.dataset.number));
     const modal = ModalRef.current;
@@ -184,17 +234,20 @@ export default function DesktopGallery() {
 
   const shuffle = () => {
     const images = document.querySelectorAll(".imgs");
-    images.forEach((e) => {
-      const description = e.querySelector("div");
+    images.forEach((el) => {
+      el.classList.remove("customWidthDesktop");
+      el.classList.remove("customWidthDesktopVertical");
+      const description = el.querySelector("div");
       if (description) description.classList.add("hidden");
-      gsap.to(e, {
-        scale: 1,
+      gsap.to(el, {
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
       });
     });
-    setLastClicked(null);
-    setLastClickedDescription(null);
+    // removed previus description
+    if (lastClickedDescriptionRef.current) lastClickedDescriptionRef.current.classList.add("hidden");
+    lastClickedRef.current = null;
+    lastClickedDescriptionRef.current = null;
   };
   const Grid = () => {
     closeModal();
@@ -208,11 +261,13 @@ export default function DesktopGallery() {
     container.classList.toggle("shuffle");
     container.classList.toggle("columns-8");
     container.classList.toggle("gap-0");
-    // menuRef.current.classList.toggle("centeredMenu");
-    setLastClicked(null);
-    setLastClickedDescription(null);
+    // removed previus description
+    if (lastClickedDescriptionRef.current) lastClickedDescriptionRef.current.classList.add("hidden");
+    lastClickedRef.current = null;
+    lastClickedDescriptionRef.current = null;
     images.forEach((e) => {
-      gsap.to(e, { scale: 1 });
+      e.classList.remove("customWidthDesktop");
+      e.classList.remove("customWidthDesktopVertical");
       e.classList.toggle("gridCustom");
       e.classList.toggle("transitionCustom");
       const description = e.querySelector("div");
@@ -226,16 +281,53 @@ export default function DesktopGallery() {
   };
   const clearScale = () => {
     const images = document.querySelectorAll(".imgs");
-    images.forEach((e) => {
-      gsap.to(e, { scale: 1 });
+    images.forEach((el) => {
+      el.classList.remove("customWidthDesktop");
+      el.classList.remove("customWidthDesktopVertical");
     });
-    gsap.to(lastClicked, {
+    gsap.to(lastClickedRef.current, {
       x: () => `${randomNumber()}vw`,
       y: () => `${randomNumber()}vh`,
     });
-    lastClickedDescription.classList.add("hidden");
-    setLastClicked(null);
-    setLastClickedDescription(null);
+    // removed previus description
+    if (lastClickedDescriptionRef.current) lastClickedDescriptionRef.current.classList.add("hidden");
+    lastClickedRef.current = null;
+    lastClickedDescriptionRef.current = null;
+  };
+  const openImg = (e) => {
+    // check if its in the grid setup
+    if (gridedRef.current) return;
+    // put the last clicked photo in a random position
+    if (lastClickedRef.current) {
+      randomPosition(lastClickedRef.current);
+    }
+    // current foto as lasct clicked photo ready for the switch
+    lastClickedRef.current = e;
+    // centered
+    gsap.to(e, {
+      x: 0,
+      y: 0,
+    });
+
+    // scaled for a bigger photo
+    if (e.dataset.ratio) {
+      e.classList.add("customWidthDesktopVertical");
+    } else {
+      e.classList.add("customWidthDesktop");
+    }
+
+    // get the current photo description
+    const description = e.querySelector("div");
+    // removed previus description
+    if (lastClickedDescriptionRef.current) lastClickedDescriptionRef.current.classList.add("hidden");
+    // added current description
+    lastClickedDescriptionRef.current = description;
+    // description showed
+    description.classList.remove("hidden");
+    // active index img
+    setActiveImage(parseInt(e.dataset.number));
+    // open modal if the grid btn is pressed
+    if (gridedRef.current) return openModal(e);
   };
   useGSAP(
     () => {
@@ -255,12 +347,14 @@ export default function DesktopGallery() {
         bounds: containerRef.current,
         inertia: true,
         edgeResistance: 0.8,
+        minimumMovement: 6,
         onClick() {
           img.forEach((el) => {
-            gsap.to(el, {
-              scale: 1,
-            });
+            el.classList.remove("customWidthDesktop");
+            el.classList.remove("customWidthDesktopVertical");
           });
+          // call a function to scale and center the img
+          openImg(this.target);
         },
       });
     },
@@ -268,11 +362,6 @@ export default function DesktopGallery() {
       scope: containerRef,
     },
   );
-  // orologio
-  useEffect(() => {
-    const interval = setInterval(() => setClockValue(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
   return (
     <div
       ref={containerRef}
@@ -357,36 +446,7 @@ export default function DesktopGallery() {
         </div>
         {/* fine descrizione */}
         <div className="bg-white p-1">
-          <Clock
-            value={clockValue}
-            size={65} // dimensione in px o stringa "50vw"
-            // lancette
-            hourHandLength={45} // lunghezza lancetta ore (%)
-            hourHandWidth={2} // spessore (px)
-            minuteHandLength={70}
-            minuteHandWidth={2}
-            secondHandLength={90}
-            secondHandWidth={1}
-            // parte opposta delle lancette
-            hourHandOppositeLength={10}
-            minuteHandOppositeLength={10}
-            secondHandOppositeLength={10}
-            // tacche
-            hourMarksLength={10}
-            hourMarksWidth={3}
-            minuteMarksLength={6}
-            minuteMarksWidth={1}
-            // toggle elementi
-            renderNumbers={false} // mostra/nascondi numeri
-            renderMinuteHand={true}
-            renderSecondHand={true}
-            renderHourMarks={true}
-            renderMinuteMarks={true}
-            // altro
-            locale="it-IT"
-            useMillisecondPrecision={false}
-            className="my-clock"
-          />
+          <LiveClock />
         </div>
       </div>
       {gallery.map((e, i) => {
@@ -397,34 +457,8 @@ export default function DesktopGallery() {
             data-ratio={e.includes("v") ? "vertical" : undefined}
             className=" imgs absolute w-[10vw] "
             onClick={(e) => {
-              setActiveImage(parseInt(e.currentTarget.dataset.number));
-              if (gridedRef.current) return openModal(e.currentTarget);
-              setLastClicked(e.currentTarget);
               e.stopPropagation();
-              const vertical = e.currentTarget.querySelector("img").dataset.name;
-              if (vertical) {
-                gsap.to(e.currentTarget, {
-                  scale: 2,
-                  x: 0,
-                  y: 0,
-                });
-              } else {
-                gsap.to(e.currentTarget, {
-                  scale: 4,
-                  x: 0,
-                  y: 0,
-                });
-              }
-
-              gsap.to(lastClicked, {
-                x: () => `${randomNumber()}vw`,
-                y: () => `${randomNumber()}vh`,
-              });
-              const description = e.currentTarget.querySelector("div");
-
-              setLastClickedDescription(description);
-              description.classList.remove("hidden");
-              lastClickedDescription.classList.add("hidden");
+              if (gridedRef.current) return openModal(e.currentTarget);
             }}
           >
             <Image
@@ -432,13 +466,13 @@ export default function DesktopGallery() {
               alt="foto"
               width={400}
               height={300}
-              className="relative opacity-0 transition-opacity duration-200"
+              className="relative opacity-0 transition-opacity duration-200 w-full"
               loading={i < 6 ? "eager" : "lazy"}
               data-name={e.includes("v") ? "vertical" : undefined}
               onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
             />
             <div className=" hidden ">
-              <p className={`text-white ${e.includes("v") ? "text-[0.8vw]" : "text-[0.4vw]"}   p-2 text-center font-thin tracking-tight`}>
+              <p className={`text-white  text-[1.2vw]  p-2 text-center font-thin tracking-tight`}>
                 {descriptionPhotos[activeImage]}
                 {}
               </p>
@@ -451,11 +485,17 @@ export default function DesktopGallery() {
         onClick={() => {
           closeModal();
         }}
-        className="fixed inset-0 bg-black/50 hidden items-center justify-start z-9999999"
+        className="fixed inset-0 bg-black/50 hidden items-center  z-9999999"
       >
         (
         {activeImage !== null && (
-          <Image src={gallery[activeImage]} alt="foto" width={800} height={1200} className={`relative ${activeImageRatio ? "scaleModalVertical" : ""}`} />
+          <Image
+            src={gallery[activeImage]}
+            alt="foto"
+            width={800}
+            height={1200}
+            className={`relative ${activeImageRatio ? "scaleModalVertical" : "scaleModal"}`}
+          />
         )}
         )<p className="text-white text-lg  px-2 pt-0 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
       </div>
