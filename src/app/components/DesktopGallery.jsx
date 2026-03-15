@@ -349,26 +349,31 @@ export default function DesktopGallery() {
         bounds: containerRef.current,
         inertia: true,
         edgeResistance: 0.8,
-        minimumMovement: 6,
-        onClick() {
-          img.forEach((el) => {
-            el.classList.remove("customWidthDesktop");
-            el.classList.remove("customWidthDesktopVertical");
-          });
-          // call a function to scale and center the img
-          openImg(this.target);
-        },
+        minimumMovement: 2,
       });
     },
     {
       scope: containerRef,
     },
   );
+  useEffect(() => {
+    const imgs = document.querySelectorAll(".imgs");
+    imgs.forEach((img) => {
+      img.addEventListener(
+        "click",
+        (e) => {
+          console.log("PRIMO", e.target.tagName, e.target.className);
+        },
+        true,
+      );
+    });
+  }, []);
   return (
     <div
       ref={containerRef}
       className="w-screen min-h-screen bg-black relative  shuffle pb-[100] "
       onClick={() => {
+        console.log("container");
         clearScale();
       }}
     >
@@ -459,8 +464,16 @@ export default function DesktopGallery() {
             data-ratio={e.includes("v") ? "vertical" : undefined}
             className=" imgs absolute w-[10vw] "
             onClick={(e) => {
+              console.log("div");
               e.stopPropagation();
+              const img = document.querySelectorAll(".imgs");
               if (gridedRef.current) return openModal(e.currentTarget);
+              img.forEach((el) => {
+                el.classList.remove("customWidthDesktop");
+                el.classList.remove("customWidthDesktopVertical");
+              });
+              // call a function to scale and center the img
+              openImg(e.currentTarget);
             }}
           >
             <Image
