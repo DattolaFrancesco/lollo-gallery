@@ -6,8 +6,6 @@ import Draggable from "gsap/dist/Draggable";
 import InertiaPlugin from "gsap/dist/InertiaPlugin";
 import { useEffect, useRef, useState } from "react";
 import RecallMemoryForm from "./RecallMemoryForm";
-import Clock from "react-clock";
-import "react-clock/dist/Clock.css";
 import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
@@ -124,42 +122,7 @@ const descriptionPhotos = [
   "SALOTTO BAGNOLO APR 2022",
   "CARBONE AL DENTE BAGNOLO APR 2022",
 ];
-function LiveClock() {
-  const [clockValue, setClockValue] = useState(new Date());
 
-  useEffect(() => {
-    const interval = setInterval(() => setClockValue(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <Clock
-      value={clockValue}
-      size={65}
-      hourHandLength={45}
-      hourHandWidth={2}
-      minuteHandLength={70}
-      minuteHandWidth={2}
-      secondHandLength={90}
-      secondHandWidth={1}
-      hourHandOppositeLength={10}
-      minuteHandOppositeLength={10}
-      secondHandOppositeLength={10}
-      hourMarksLength={10}
-      hourMarksWidth={3}
-      minuteMarksLength={6}
-      minuteMarksWidth={1}
-      renderNumbers={false}
-      renderMinuteHand={true}
-      renderSecondHand={true}
-      renderHourMarks={true}
-      renderMinuteMarks={true}
-      locale="it-IT"
-      useMillisecondPrecision={false}
-      className="my-clock"
-    />
-  );
-}
 export default function DesktopGallery() {
   const router = useRouter();
   const containerRef = useRef(null);
@@ -181,14 +144,6 @@ export default function DesktopGallery() {
   // img ratio
   const [activeImageRatio, setActiveImageRatio] = useState(null);
   const gridedRef = useRef(false);
-  const mixArray = (arr1, arr2) => {
-    closeModal();
-    for (let i = arr1.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr1[i], arr1[j]] = [arr1[j], arr1[i]];
-      [arr2[i], arr2[j]] = [arr2[j], arr2[i]];
-    }
-  };
   const randomNumber = () => {
     const zone = Math.random();
 
@@ -213,8 +168,10 @@ export default function DesktopGallery() {
   const openModal = (e) => {
     if (e.dataset.ratio) {
       ModalRef.current.classList.add("justify-start");
+      ModalRef.current.classList.add("paddingTopCustomDesktopVerticalModal");
       ModalRef.current.classList.remove("justify-center");
     } else {
+      ModalRef.current.classList.remove("paddingTopCustomDesktopVerticalModal");
       ModalRef.current.classList.remove("justify-start");
       ModalRef.current.classList.add("justify-center");
     }
@@ -349,31 +306,44 @@ export default function DesktopGallery() {
         bounds: containerRef.current,
         inertia: true,
         edgeResistance: 0.8,
-        minimumMovement: 2,
+        minimumMovement: 10,
+        onClick: function(){
+          console.log("click")
+           const img = document.querySelectorAll(".imgs");
+              if (gridedRef.current) return openModal(this.target);
+              img.forEach((el) => {
+                el.classList.remove("customWidthDesktop");
+                el.classList.remove("customWidthDesktopVertical");
+              });
+              // call a function to scale and center the img
+              openImg(this.target);
+        },
+          onDragEnd: function() {
+    // se si è mosso meno di 8px in totale, trattalo come click
+    const distX = Math.abs(this.endX - this.startX);
+    const distY = Math.abs(this.endY - this.startY);
+    if (distX < 8 && distY < 8) {
+      const imgs = document.querySelectorAll(".imgs");
+      if (gridedRef.current) return openModal(this.target);
+      imgs.forEach((el) => {
+        el.classList.remove("customWidthDesktop");
+        el.classList.remove("customWidthDesktopVertical");
+      });
+      openImg(this.target);
+    }
+  },
+        
       });
     },
     {
       scope: containerRef,
     },
   );
-  useEffect(() => {
-    const imgs = document.querySelectorAll(".imgs");
-    imgs.forEach((img) => {
-      img.addEventListener(
-        "click",
-        (e) => {
-          console.log("PRIMO", e.target.tagName, e.target.className);
-        },
-        true,
-      );
-    });
-  }, []);
   return (
     <div
       ref={containerRef}
       className="w-screen min-h-screen bg-black relative  shuffle pb-[100] "
       onClick={() => {
-        console.log("container");
         clearScale();
       }}
     >
@@ -452,9 +422,7 @@ export default function DesktopGallery() {
           <p className="text-xs p-1">Lorenzo Accorti discomposed archive, to recall memory form. Lorenzo Accorti discomposed archive, to recall memory form.</p>
         </div>
         {/* fine descrizione */}
-        <div className="bg-white p-1">
-          <LiveClock />
-        </div>
+  
       </div>
       {gallery.map((e, i) => {
         return (
@@ -464,23 +432,14 @@ export default function DesktopGallery() {
             data-ratio={e.includes("v") ? "vertical" : undefined}
             className=" imgs absolute w-[10vw] "
             onClick={(e) => {
-              console.log("div");
               e.stopPropagation();
-              const img = document.querySelectorAll(".imgs");
-              if (gridedRef.current) return openModal(e.currentTarget);
-              img.forEach((el) => {
-                el.classList.remove("customWidthDesktop");
-                el.classList.remove("customWidthDesktopVertical");
-              });
-              // call a function to scale and center the img
-              openImg(e.currentTarget);
             }}
           >
             <Image
               src={e}
               alt="foto"
-              width={400}
-              height={300}
+              width={800}
+              height={600}
               className="relative opacity-0 transition-opacity duration-200 w-full"
               loading={i < 6 ? "eager" : "lazy"}
               data-name={e.includes("v") ? "vertical" : undefined}

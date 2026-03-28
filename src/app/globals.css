@@ -49,6 +49,9 @@ p {
 .customWidth {
   width: 70vw;
 }
+.paddingTopCustomDesktopVerticalModal{
+  padding-top: 7vh;
+}
 .customWidthDesktop {
   width: 45vw;
   max-width: 60rem;

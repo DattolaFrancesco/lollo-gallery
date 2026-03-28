@@ -1,5 +1,4 @@
 "use client";
-import { useMediaQuery } from "react-responsive";
 import MobileGallery from "./MobileGallery";
 import DesktopGallery from "./DesktopGallery";
 import { useState, useEffect } from "react";

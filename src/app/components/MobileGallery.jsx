@@ -122,13 +122,12 @@ const descriptionPhotos = [
   "CARBONE AL DENTE BAGNOLO APR 2022",
 ];
 
-export default function DesktopGallery({ blurData }) {
+export default function DesktopGallery() {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
   const dragRef = useRef([]);
   const ModalRef = useRef(null);
   const [btnGrid, setBtnGrid] = useState("Grid");
-  const [loaded, setLoaded] = useState(false);
   const gridedRef = useRef(false);
   // last photo clicked
   const lastClickedRef = useRef(null);
@@ -136,29 +135,6 @@ export default function DesktopGallery({ blurData }) {
   const lastClickedDescriptionRef = useRef(null);
   // modal img active that can mount the component every time that change
   const [activeImage, setActiveImage] = useState(0);
-  const loadImage = (src) => {
-    return new Promise((resolve, reject) => {
-      const img = new window.Image();
-      img.src = src;
-      img.onload = () => {
-        resolve(src);
-        console.log("img caricata");
-      };
-      img.onerror = () => reject(src);
-    });
-  };
-  const preloadImages = async (images) => {
-    const promises = images.map((src) => loadImage(src));
-    await Promise.all(promises);
-  };
-  useEffect(() => {
-    const init = async () => {
-      await preloadImages(gallery);
-      setLoaded(true);
-    };
-
-    init();
-  }, []);
   const randomNumber = () => {
     let n = Math.floor(Math.random() * 37);
     let direction = Math.random();
@@ -297,7 +273,6 @@ export default function DesktopGallery({ blurData }) {
     },
     {
       scope: containerRef,
-      // dependencies: [loaded],
     },
   );
   return (
@@ -334,10 +309,7 @@ export default function DesktopGallery({ blurData }) {
           <a href="https://www.instagram.com/francescodattola_/">DEVELOPED BY FRANCESCO DATTOLA</a>
         </p>
       </>
-
-      {/* {!loaded && <h1 className="text-red-700">ciao sto caricando...</h1>} */}
       {
-        //loaded &&
         gallery.map((e, i) => {
           return (
             <div
@@ -354,8 +326,6 @@ export default function DesktopGallery({ blurData }) {
                 alt="foto"
                 width={450}
                 height={300}
-                placeholder="blur"
-                blurDataURL={blurData[i]}
                 style={{ opacity: 1 }}
                 className="relative w-full will-change-[transform,opacity]"
                 data-name={e.includes("v") ? "vertical" : undefined}
@@ -381,8 +351,6 @@ export default function DesktopGallery({ blurData }) {
           width={1200}
           height={800}
           className={`relative scaleModalVerticalMobile`}
-          placeholder="blur"
-          blurDataURL={blurData[activeImage]}
           style={{ opacity: 1 }}
         />
         )<p className="text-white text-customModalMobile p-2 text-center font-thin tracking-tight">{descriptionPhotos[activeImage]}</p>
