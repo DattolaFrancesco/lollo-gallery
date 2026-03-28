@@ -290,7 +290,6 @@ export default function DesktopGallery() {
   };
   useGSAP(
     () => {
-      //if (!loaded) return;
       const img = document.querySelectorAll(".imgs");
       gsap.set(img, { x: 0, y: 0 });
 

@@ -136,13 +136,19 @@ export default function DesktopGallery() {
   // modal img active that can mount the component every time that change
   const [activeImage, setActiveImage] = useState(0);
   const randomNumber = () => {
-    let n = Math.floor(Math.random() * 37);
-    let direction = Math.random();
-    while (n < 7) {
-      n = Math.floor(Math.random() * 37);
+     const zone = Math.random();
+
+    if (zone < 0.3) {
+      // 30% delle immagini vicino al centro
+      const n = Math.random() * 12; // 0-8
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      return n * direction;
+    } else {
+      // 70% distribuite nel resto della pagina
+      const n = 12 + Math.random() * 20; // 12-32
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      return n * direction;
     }
-    if (direction > 0.5) return n;
-    else return -n;
   };
   const randomPosition = (e) => {
     gsap.to(e, {
@@ -153,7 +159,9 @@ export default function DesktopGallery() {
   const openModal = (e) => {
     setActiveImage(parseInt(e.dataset.number));
     const modal = ModalRef.current;
-    modal.classList.remove("hidden");
+     setTimeout(() => {
+      modal.classList.remove("hidden");
+    }, 150);
     modal.classList.add("flex");
     modal.classList.add("flex-col");
   };
@@ -179,6 +187,8 @@ export default function DesktopGallery() {
   const openImg = (e) => {
     // put the last clicked photo in a random position
     randomPosition(lastClickedRef.current);
+   // checking if the same photo is clicked
+    if (e === lastClickedRef.current) return clearScale();
     // current foto as lasct clicked photo ready for the switch
     lastClickedRef.current = e;
     // centered
@@ -251,7 +261,6 @@ export default function DesktopGallery() {
         duration: 1.2,
         x: () => `${randomNumber()}vw`,
         y: () => `${randomNumber()}vh`,
-        stagger: 0.09,
         ease: "power1.out",
       });
 
@@ -269,6 +278,20 @@ export default function DesktopGallery() {
           // stop click propagation
           this.target.stopPropagation();
         },
+               onDragEnd: function() {
+    // se si è mosso meno di 8px in totale, trattalo come click
+    const distX = Math.abs(this.endX - this.startX);
+    const distY = Math.abs(this.endY - this.startY);
+    if (distX < 8 && distY < 8) {
+      img.forEach((el) => {
+            el.classList.remove("customWidth");
+          });
+          // call a function to scale and center the img
+          openImg(this.target);
+          // stop click propagation
+          this.target.stopPropagation();
+    }
+  },
       });
     },
     {
@@ -283,7 +306,6 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      {/* {loaded && ( */}
       <>
         <button
           ref={btnShuffleRef}
@@ -298,6 +320,7 @@ export default function DesktopGallery() {
         <button
           onClick={(e) => {
             e.stopPropagation();
+            clearScale();
             Grid();
           }}
           className="text-white  cursor-pointer fixed top-[5vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
