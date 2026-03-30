@@ -43,7 +43,7 @@ img {
   transition: opacity 0.5s ease-in-out;
 }
 p {
-  font-family: var(--font-switzer);
+  font-family: var(--font-gt-america-mono);
   font-weight: 500;
 }
 .customWidth {

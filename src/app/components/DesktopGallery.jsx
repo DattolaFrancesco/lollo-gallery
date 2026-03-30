@@ -445,7 +445,7 @@ export default function DesktopGallery() {
               onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
             />
             <div className=" hidden ">
-              <p className={`text-white  text-[1.2vw]  p-2 text-center font-thin tracking-tight`}>
+              <p style={{ color: 'white', mixBlendMode: 'difference' }} className={`  text-[1.2vw]  p-2 text-center font-thin tracking-tight`}>
                 {descriptionPhotos[activeImage]}
                 {}
               </p>

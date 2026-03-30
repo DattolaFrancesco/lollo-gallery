@@ -9,6 +9,13 @@ const switzer = localFont({
   variable: "--font-switzer",
   fallback: ["Arial", "sans-serif"],
 });
+const gtAmericaMono = localFont({
+  src: [
+    { path: "./fonts/GT-AMERICA-MONO-LIGHT-TRIAL.woff2", weight: "300", style: "normal" },
+  ],
+  variable: "--font-gt-america-mono",
+  fallback: ["Courier New", "monospace"],
+});
 export const metadata = {
   title: "MEMORY FORM",
   description: "Lorenzo Accorti discomposed archive, to recall memory form",
@@ -17,7 +24,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`antialiased ${switzer.className} ${switzer.variable} bg-black`}>{children}</body>
+      <body className={`antialiased ${gtAmericaMono.variable} bg-black`}>{children}</body>
     </html>
   );
 }
