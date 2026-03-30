@@ -83,7 +83,7 @@ p {
   top: 90%;
 }
 .generic1sTransition {
-  transition: all 1s;
+  transition: all .5s;
 }
 /* media query */
 @media (min-width: 567px) {

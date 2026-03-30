@@ -5,7 +5,9 @@ import { useGSAP } from "@gsap/react";
 import Draggable from "gsap/dist/Draggable";
 import InertiaPlugin from "gsap/dist/InertiaPlugin";
 import { useEffect, useRef, useState } from "react";
-import RecallMemoryForm from "./RecallMemoryForm";
+import MemoryForm from "./MemoryForm"
+import WhiteStar from "./WhiteStar"
+import BlackStar from "./BlackStar"
 import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
@@ -88,7 +90,7 @@ const descriptionPhotos = [
   "STILL KIDS CAMERA DI COMMERCIO APR 2024",
   "TIRO LUNGO CARMINE APR 2024",
   "EDEN PULITO CARMINE APR 2024",
-  "CLICK & DOYE OCT 2025",
+  "CLICK E DOYE OCT 2025",
   "PASTA E MANU LEMBRIO JUL 2023",
   "PLAZATI AD ALBENGA JUL 2023",
   "DOUBLE FRONT FLIP ALASSIO JUL 2023",
@@ -124,7 +126,6 @@ const descriptionPhotos = [
 ];
 
 export default function DesktopGallery() {
-  const router = useRouter();
   const containerRef = useRef(null);
   // menu
   const menuRef = useRef(null);
@@ -143,7 +144,26 @@ export default function DesktopGallery() {
   const [activeImage, setActiveImage] = useState(0);
   // img ratio
   const [activeImageRatio, setActiveImageRatio] = useState(null);
+  // stars
+  //black
+  const BlackStarRef = useRef(null);
+  //white
+  const WhiteStarRef = useRef(null);
+  //info
+  const infoRef = useRef(null);
+  //timeout btn
+  const timeOutBtn = useRef(false);
+  //grid setter
   const gridedRef = useRef(false);
+
+  const backGround = ()=>{
+    BlackStarRef.current.classList.toggle("scale-[2.5]")
+    WhiteStarRef.current.classList.toggle("scale-[2.5]")
+    document.body.classList.toggle("bg-black")
+    infoRef.current.classList.toggle("text-white")
+    const descriptions = document.querySelectorAll(".photo-description");
+  descriptions.forEach(el => el.classList.toggle("text-white"));
+  }
   const randomNumber = () => {
     const zone = Math.random();
 
@@ -341,87 +361,83 @@ export default function DesktopGallery() {
   return (
     <div
       ref={containerRef}
-      className="w-screen min-h-screen bg-black relative  shuffle pb-[100] "
+      className="w-screen min-h-screen relative  shuffle pb-[100] "
       onClick={() => {
         clearScale();
       }}
     >
-      <div
+       <div
         ref={menuRef}
-        className=" flex gap-0.5  absolute left-[50%]  top-[90%] -translate-1/2 m-2 w-[600] min-h-[60] z-999999999999 fixed top-0 generic1sTransition"
+        className=" flex justify-center gap-0.5  absolute left-[50%]  top-[90%] -translate-1/2 m-2 w-[350] min-h-[40] z-999999999999 fixed top-0"
       >
-        {/* logo */}
-        <div className=" w-[15%] bg-white hover:bg-gray-200 flex justify-center items-center">
+        <button onClick = {(e)=>{e.stopPropagation(); backGround()}} 
+        ref={BlackStarRef} 
+        className="absolute right-[120%] -translate-1/2 top-1/2 scale-[2.5] cursor-pointer generic1sTransition"><BlackStar/></button>
+        <button onClick = {(e)=>{ e.stopPropagation(); backGround()}} 
+        ref={WhiteStarRef} 
+        className="absolute right-[105%] -translate-1/2 top-1/2 cursor-pointer generic1sTransition"><WhiteStar/></button>
+        {/* inizio shuffle  */}
+        <div className="bg-white hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col">
           <button
+          className="w-full h-full text-xs cursor-pointer activeBtn"
+            ref={btnShuffleRef}
+                onClick={() => {
+                  if(timeOutBtn.current) return
+                  if(!gridedRef.current) return
+                  Grid();
+                  timeOutBtn.current = true;
+                  setTimeout(() => {
+                    timeOutBtn.current = false;
+                  }, 1000);
+                }}
+          >
+           SHUFFLE
+          </button>
+        </div>
+        {/* fine shuffle  */}
+        {/* inizio logo */}
+        <div className="bg-white hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col relative">
+          <button
+          className="w-full h-full cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              router.push("/");
+              if(timeOutBtn.current) return
+              if (gridedRef.current)
+                Grid(); 
+              else shuffle();
             }}
-            className="cursor-pointer"
           >
-            <RecallMemoryForm className="w-full h-auto p-1" />
+            <div className="absolute top-[-60%]"><MemoryForm/></div>
           </button>
         </div>
         {/* fine logo */}
-        {/* inizio btn */}
-        <div className=" w-[35%] flex flex-col gap-0.5 ">
-          <div className="flex justify-between bg-white">
-            <p className="text-xs p-1">Visualization</p>
-            <div className="flex p-1.5">
-              <button
-                ref={btnShuffleRef}
-                onClick={() => {
-                  Grid();
-                }}
-                className="text-xs text-white hover:bg-gray-300  bg-gray-200 p-1 activeBtn cursor-pointer"
-              >
-                Shuffle
-              </button>
-              <button
-                ref={btnGridRef}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  Grid();
-                }}
-                className="text-xs text-white hover:bg-gray-300 bg-gray-200 p-1 cursor-pointer"
-              >
-                Grid
-              </button>
-            </div>
-          </div>
-          <div className="bg-white hover:bg-gray-200">
-            <a href="https://www.instagram.com/lollochef_/">
-              <p className="text-xs px-1">Archive by Lorenzo Accorti</p>
-            </a>
-          </div>
-          <div className="bg-white hover:bg-gray-200">
-            <a href="https://www.instagram.com/francescodattola_/">
-              <p className="text-xs px-1">Developed by Francesco Dattola</p>
-            </a>
-          </div>
-        </div>
-        {/* fine btn */}
-        {/* inizio shuffle */}
-        <div className="bg-white hover:bg-gray-200 w-[5%] flex items-center justify-center flex-col">
+   {/* inizio shuffle  */}
+        <div className="bg-white hover:bg-gray-200 border-[1px] border-black w-[33%] flex items-center justify-center flex-col">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (gridedRef.current)
-                Grid(); //mixArray(gallery, descriptionPhotos);
-              else shuffle();
-            }}
-            className="-rotate-90 p-1"
+          className="w-full h-full text-xs cursor-pointer"
+            ref={btnGridRef}
+                onClick={() => {
+                  if(timeOutBtn.current) return
+                  if(gridedRef.current) return
+                  Grid();
+                    timeOutBtn.current = true;
+                  setTimeout(() => {
+                    timeOutBtn.current = false;
+                  }, 1000);
+                }}
           >
-            <p className="text-sm text-nowrap cursor-pointer">Shuffle &nbsp;● </p>
+           GRID
           </button>
         </div>
-        {/* fine shuffle */}
-        {/* inizio descrizione */}
-        <div className="w-[30%] bg-white">
-          <p className="text-xs p-1">Lorenzo Accorti discomposed archive, to recall memory form. Lorenzo Accorti discomposed archive, to recall memory form.</p>
+        {/* fine shuffle  */}
+        <div ref={infoRef} className="absolute text-nowrap justify-center flex h-full flex-col  left-[110%] text-white text-[11px]">
+          <a target="blank" href="https://www.instagram.com/francescodattola_/">
+        <p>DEVELOPED BY FRANCESCO DATTOLA</p>
+        </a>
+         <a target="blank"  href="https://www.instagram.com/lollochef_/">
+        <p>SHOT BY LORENZO ACCORDI</p>
+        </a>
         </div>
-        {/* fine descrizione */}
-  
       </div>
       {gallery.map((e, i) => {
         return (
@@ -444,8 +460,8 @@ export default function DesktopGallery() {
               data-name={e.includes("v") ? "vertical" : undefined}
               onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
             />
-            <div className=" hidden ">
-              <p style={{ color: 'white', mixBlendMode: 'difference' }} className={`  text-[1.2vw]  p-2 text-center font-thin tracking-tight`}>
+            <div  className=" hidden  ">
+              <p  className={`photo-description text-white text-lg   p-2 text-center font-thin tracking-tight`}>
                 {descriptionPhotos[activeImage]}
                 {}
               </p>
