@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import RecallMemoryFormWhite from "./components/RecallMemoryFormWhite";
+import { useRef, useState } from "react";
+
 const gallery = [
   "/gallery/1.jpg",
   "/gallery/3.jpg",
@@ -37,10 +39,25 @@ const gallery = [
   "/gallery/51.jpg",
   "/gallery/52.jpg",
 ];
+
 export default function Default() {
   const router = useRouter();
+  const cursorRef = useRef(null);
+  const [isHovering, setIsHovering] = useState(false);
+
   useGSAP(() => {
+    const svgMemory = document.querySelector(".svg");
     const blocks = document.querySelectorAll(".block");
+
+    gsap.to(svgMemory, {
+      scale: 1.03,
+      repeat: -1,
+      repeatDelay: 0.1,
+      yoyo: true,
+      ease: "power1.inOut",
+      opacity: 1,
+    });
+
     gsap.from(".block", 5, {
       scale: 0,
       opacity: 0.3,
@@ -53,28 +70,72 @@ export default function Default() {
         repeatDelay: 0.075 * (blocks.length - 1),
       },
     });
+
+    const onMove = (e) => {
+      gsap.to(cursorRef.current, {
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.15,
+        ease: "power2.out",
+      });
+    };
+
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   });
 
   return (
     <>
+      <div
+        ref={cursorRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          pointerEvents: "none",
+          mixBlendMode: "difference",
+          zIndex: 9999,
+          transform: "translate(-50%, -50%)",
+          opacity: isHovering ? 1 : 0,
+          transition: "opacity 0.2s ease",
+        }}
+      >
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="35">
+  <rect width="100" height="35" rx="17" fill="white"/>
+  <text
+    x="50"
+    y="23"
+    textAnchor="middle"
+    fontFamily="var(--font-gt-america-mono), 'Courier New', monospace"
+    fontSize="15"
+    fontWeight="300"
+    fill="black"
+    letterSpacing="0"
+  >
+    Gallery
+  </text>
+</svg>
+      </div>
+
       <div className="gallery flex flex-col justify-center items-center">
-        <RecallMemoryFormWhite width="35vw" height="50vh" className="max-h-[450px] z-999" />
         <button
-          className="mt-2 px-2 bg-white hover:bg-gray-300 cursor-pointer z-[999]"
-          onClick={() => {
-            console.log("ciao");
-            router.push("/gallery");
-          }}
+          style={{ cursor: "none" }}
+          onClick={() => router.push("/gallery")}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
-          Show Gallery
+          <RecallMemoryFormWhite
+            width="35vw"
+            height="50vh"
+            className="max-h-[450px] z-999 svg opacity-[0.8]"
+          />
         </button>
-        {gallery.map((e, i) => {
-          return (
-            <div key={e} className={`block block-${i}`}>
-              <Image src={e} alt="foto" width={800} height={600} />
-            </div>
-          );
-        })}
+
+        {gallery.map((e, i) => (
+          <div key={e} className={`block block-${i}`}>
+            <Image src={e} alt="foto" width={800} height={600} />
+          </div>
+        ))}
       </div>
     </>
   );
