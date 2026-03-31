@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import Draggable from "gsap/dist/Draggable";
 import InertiaPlugin from "gsap/dist/InertiaPlugin";
 import { useEffect, useRef, useState } from "react";
-import RecallMemoryForm from "./RecallMemoryForm";
+import MemoryForm from "./MemoryForm"
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
@@ -125,6 +125,10 @@ const descriptionPhotos = [
 export default function DesktopGallery() {
   const containerRef = useRef(null);
   const btnShuffleRef = useRef(null);
+   // btn grid alto
+  const btnGridRef = useRef(null);
+  //timeout btn
+  const timeOutBtn = useRef(false);
   const dragRef = useRef([]);
   const ModalRef = useRef(null);
   const [btnGrid, setBtnGrid] = useState("Grid");
@@ -217,13 +221,13 @@ export default function DesktopGallery() {
     else dragRef.current.forEach((d) => d.enable());
     const images = document.querySelectorAll(".imgs");
     const container = containerRef.current;
-    const btnShuffle = btnShuffleRef.current;
     const Body = document.querySelector("body");
     setBtnGrid(!btnGrid);
     Body.classList.toggle("overflow-x-hidden");
-    btnShuffle.classList.toggle("hidden");
+    btnGridRef.current.classList.toggle("activeBtn");
+    btnShuffleRef.current.classList.toggle("activeBtn");
     container.classList.toggle("shuffle");
-    container.classList.toggle("columns-2");
+    container.classList.toggle("columns-3");
     container.classList.toggle("gap-0");
     lastClickedRef.current = null;
     lastClickedDescriptionRef.current = null;
@@ -306,32 +310,71 @@ export default function DesktopGallery() {
         clearScale();
       }}
     >
-      <>
-        <button
-          ref={btnShuffleRef}
-          onClick={(e) => {
-            e.stopPropagation();
-            shuffle();
-          }}
-          className="text-white  cursor-pointer fixed -translate-x-1/2 -translate-y-1/2 left-[50%] bottom-0 z-9999"
-        >
-          <RecallMemoryForm className="w-40 h-auto" />
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            clearScale();
-            Grid();
-          }}
-          className="text-white  cursor-pointer fixed top-[5vh] -translate-x-1/2 -translate-y-1/2 left-[50%] z-9999"
-        >
-          {btnGrid ? "GRID" : "DISCOMPOSE"}
-        </button>
-        <p className="text-white text-infoCustom  cursor-pointer fixed bottom-[-1vh] left-[50%] -translate-x-1/2 -translate-y-1/2 z-9999">
-          <a href="https://www.instagram.com/lollochef_/">PHOTOGRAPHY BY LORENZO ACCORTI</a> <br />
-          <a href="https://www.instagram.com/francescodattola_/">DEVELOPED BY FRANCESCO DATTOLA</a>
-        </p>
-      </>
+       <div
+              className=" flex justify-center gap-0.5 left-[50%]  top-[90%] -translate-1/2  w-[380] min-h-[40] z-999999999999 fixed top-0"
+            >
+              {/* inizio shuffle  */}
+              <div className="bg-white  active:bg-gray-300 hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col">
+                <button
+                className="w-full h-full text-xs cursor-pointer activeBtn"
+                  ref={btnShuffleRef}
+                      onClick={() => {
+                        if(timeOutBtn.current) return
+                        if(!gridedRef.current) return
+                        Grid();
+                        timeOutBtn.current = true;
+                         setTimeout(() => {
+                           timeOutBtn.current = false;
+                         }, 1000);
+                      }}
+                >
+                 SHUFFLE
+                </button>
+              </div>
+              {/* fine shuffle  */}
+              {/* inizio logo */}
+              <div className="bg-white active:bg-gray-300 hover:bg-gray-200 border-[1px] border-black w-[30%]  flex items-center justify-center flex-col relative">
+                <button
+                className="w-full h-full cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if(timeOutBtn.current) return
+                    if (gridedRef.current)
+                      Grid(); 
+                    else shuffle();
+                  }}
+                >
+                  <div className="absolute top-[-60%]"><MemoryForm/></div>
+                </button>
+              </div>
+              {/* fine logo */}
+         {/* inizio shuffle  */}
+              <div className="bg-white  active:bg-gray-300 hover:bg-gray-200 border-[1px] border-black w-[33%] flex items-center justify-center flex-col">
+                <button
+                className="w-full h-full text-xs cursor-pointer"
+                  ref={btnGridRef}
+                      onClick={() => {
+                        if(timeOutBtn.current) return
+                        if(gridedRef.current) return
+                        Grid();
+                          timeOutBtn.current = true;
+                         setTimeout(() => {
+                           timeOutBtn.current = false;
+                         }, 1000);
+                      }}
+                >
+                 GRID
+                </button>
+              </div>
+              {/* fine shuffle  */}
+              <div r className="absolute text-nowrap justify-center flex h-full flex-col  top-[130%] text-white text-[9px]">
+              <p className="flex gap-1 tracking-widest"><span> <a target="blank"  href="https://www.instagram.com/lollochef_/">
+              <p>SHOT BY LORENZO ACCORDI</p>
+              </a></span><span> <a target="blank" href="https://www.instagram.com/francescodattola_/">
+              <p>DEVELOPED BY FRANCESCO DATTOLA</p>
+              </a></span></p>
+              </div>
+            </div>
       {
         gallery.map((e, i) => {
           return (

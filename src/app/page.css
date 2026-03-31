@@ -1,8 +1,10 @@
+
 .gallery {
   position: absolute;
   width: 100vw;
   height: 100svh;
-  perspective: 2000px;
+  perspective: 1500px;
+  overflow: hidden;
 }
 .block {
   position: absolute;
@@ -77,8 +79,8 @@
   left: 30%;
 }
 .block-16 {
-  top: 12%;
-  left: 10%;
+  top: 60%;
+  left: 4%;
 }
 .block-17 {
   top: 20%;
@@ -134,6 +136,12 @@
 }
 
 @media screen and (min-width:1200px){
+  .gallery {
+  position: absolute;
+  width: 100vw;
+  height: 100svh;
+  perspective: 2000px;
+}
 .block-0 {
   top: 30%;
   left: 55%;

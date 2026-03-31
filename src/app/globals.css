@@ -1,5 +1,8 @@
 @import "tailwindcss";
-
+html, body {
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
 .gridCustom {
   position: relative;
   display: block;

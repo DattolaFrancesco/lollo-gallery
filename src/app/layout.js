@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 
+
 const switzer = localFont({
   src: [
     { path: "./fonts/Switzer-Variable.woff2", style: "normal" },
