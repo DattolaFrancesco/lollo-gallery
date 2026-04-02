@@ -311,7 +311,7 @@ export default function DesktopGallery() {
       }}
     >
        <div
-              className=" flex justify-center gap-0.5 left-[50%]  top-[90%] -translate-1/2  w-[380] min-h-[40] z-999999999999 fixed top-0"
+              className=" flex justify-center  left-[50%]  top-[90%] -translate-1/2  w-[380] min-h-[40] z-999999999999 fixed top-0"
             >
               {/* inizio shuffle  */}
               <div className="bg-white  active:bg-gray-300 hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col">
@@ -322,6 +322,7 @@ export default function DesktopGallery() {
                         if(timeOutBtn.current) return
                         if(!gridedRef.current) return
                         Grid();
+                        closeModal();
                         timeOutBtn.current = true;
                          setTimeout(() => {
                            timeOutBtn.current = false;
@@ -333,18 +334,20 @@ export default function DesktopGallery() {
               </div>
               {/* fine shuffle  */}
               {/* inizio logo */}
-              <div className="bg-white active:bg-gray-300 hover:bg-gray-200 border-[1px] border-black w-[30%]  flex items-center justify-center flex-col relative">
+              <div className="bg-white active:bg-gray-300 hover:bg-gray-200 border-t border-b border-black w-[30%]  flex items-center justify-center flex-col relative">
                 <button
                 className="w-full h-full cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     if(timeOutBtn.current) return
-                    if (gridedRef.current)
+                    if (gridedRef.current){
                       Grid(); 
+                      closeModal();
+                    }
                     else shuffle();
                   }}
                 >
-                  <div className="absolute top-[-60%]"><MemoryForm/></div>
+                  <div className="absolute top-[-62%] right-[-10%] w-full"><MemoryForm/></div>
                 </button>
               </div>
               {/* fine logo */}

@@ -3,6 +3,9 @@ html, body {
   overscroll-behavior: none;
   touch-action: manipulation;
 }
+button{
+  font-family: var(--font-gt-america-mono);
+}
 .gridCustom {
   position: relative;
   display: block;
@@ -116,7 +119,7 @@ p {
 }
 @media (min-width: 1024px) {
   .customWidth {
-    width: 35vw;
+    width: 30vw;
   }
   .text-infoCustom {
     font-size: 0.8vw;

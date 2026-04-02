@@ -368,7 +368,7 @@ export default function DesktopGallery() {
     >
        <div
         ref={menuRef}
-        className=" flex justify-center gap-0.5  absolute left-[50%]  top-[90%] -translate-1/2 m-2 w-[350] min-h-[40] z-999999999999 fixed top-0"
+        className=" flex justify-center  absolute left-[50%]  top-[90%] -translate-1/2 m-2 w-[350] min-h-[40] z-999999999999 fixed top-0"
       >
         <button onClick = {(e)=>{e.stopPropagation(); backGround()}} 
         ref={BlackStarRef} 
@@ -396,7 +396,7 @@ export default function DesktopGallery() {
         </div>
         {/* fine shuffle  */}
         {/* inizio logo */}
-        <div className="bg-white hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col relative">
+        <div className="bg-white hover:bg-gray-200 border-t border-b border-black w-[33%]  flex items-center justify-center flex-col relative">
           <button
           className="w-full h-full cursor-pointer"
             onClick={(e) => {
@@ -407,7 +407,7 @@ export default function DesktopGallery() {
               else shuffle();
             }}
           >
-            <div className="absolute top-[-60%]"><MemoryForm/></div>
+            <div className="absolute top-[-65%] right-[-10%] w-full"><MemoryForm/></div>
           </button>
         </div>
         {/* fine logo */}

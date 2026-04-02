@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import RecallMemoryFormWhite from "./components/RecallMemoryFormWhite";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const gallery = [
   "/gallery/1.jpg",
@@ -83,10 +83,19 @@ export default function Default() {
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
   });
+  const [isMobile, setIsMobile] = useState(null);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1200);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <>
-      <div
+      {!isMobile && <div 
         ref={cursorRef}
         style={{
           position: "fixed",
@@ -115,7 +124,7 @@ export default function Default() {
     Gallery
   </text>
 </svg>
-      </div>
+      </div>}
 
       <div className="gallery flex flex-col justify-center items-center">
         <button
