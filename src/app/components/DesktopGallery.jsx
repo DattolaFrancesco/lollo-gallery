@@ -233,8 +233,6 @@ export default function DesktopGallery() {
     const container = containerRef.current;
     const Body = document.querySelector("body");
     Body.classList.add("overflow-x-hidden");
-    btnGridRef.current.classList.toggle("activeBtn");
-    btnShuffleRef.current.classList.toggle("activeBtn");
     container.classList.toggle("shuffle");
     container.classList.toggle("columns-8");
     container.classList.toggle("gap-0");
@@ -379,12 +377,14 @@ export default function DesktopGallery() {
         {/* inizio shuffle  */}
         <div className="bg-white hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col">
           <button
-          className="w-full h-full text-xs cursor-pointer activeBtn"
+          className="w-full h-full text-xs cursor-pointer "
             ref={btnShuffleRef}
                 onClick={() => {
                   if(timeOutBtn.current) return
                   if(!gridedRef.current) return
                   Grid();
+                    btnGridRef.current.classList.remove("activeBtn");
+                    btnShuffleRef.current.classList.add("activeBtn");
                   timeOutBtn.current = true;
                   setTimeout(() => {
                     timeOutBtn.current = false;
@@ -420,6 +420,8 @@ export default function DesktopGallery() {
                   if(timeOutBtn.current) return
                   if(gridedRef.current) return
                   Grid();
+                    btnGridRef.current.classList.add("activeBtn");
+                    btnShuffleRef.current.classList.remove("activeBtn");
                     timeOutBtn.current = true;
                   setTimeout(() => {
                     timeOutBtn.current = false;

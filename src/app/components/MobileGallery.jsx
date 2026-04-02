@@ -224,8 +224,8 @@ export default function DesktopGallery() {
     const Body = document.querySelector("body");
     setBtnGrid(!btnGrid);
     Body.classList.toggle("overflow-x-hidden");
-    btnGridRef.current.classList.toggle("activeBtn");
-    btnShuffleRef.current.classList.toggle("activeBtn");
+    //btnGridRef.current.classList.toggle("activeBtn");
+    //btnShuffleRef.current.classList.toggle("activeBtn");
     container.classList.toggle("shuffle");
     container.classList.toggle("columns-3");
     container.classList.toggle("gap-0");
@@ -316,13 +316,15 @@ export default function DesktopGallery() {
               {/* inizio shuffle  */}
               <div className="bg-white  active:bg-gray-300 hover:bg-gray-200 border-[1px] border-black w-[33%]  flex items-center justify-center flex-col">
                 <button
-                className="w-full h-full text-xs cursor-pointer activeBtn"
+                className="w-full h-full text-xs cursor-pointer "
                   ref={btnShuffleRef}
                       onClick={() => {
                         if(timeOutBtn.current) return
                         if(!gridedRef.current) return
                         Grid();
                         closeModal();
+                        btnGridRef.current.classList.remove("activeBtn");
+                        btnShuffleRef.current.classList.add("activeBtn");
                         timeOutBtn.current = true;
                          setTimeout(() => {
                            timeOutBtn.current = false;
@@ -360,6 +362,8 @@ export default function DesktopGallery() {
                         if(timeOutBtn.current) return
                         if(gridedRef.current) return
                         Grid();
+                        btnGridRef.current.classList.add("activeBtn");
+                        btnShuffleRef.current.classList.remove("activeBtn");
                           timeOutBtn.current = true;
                          setTimeout(() => {
                            timeOutBtn.current = false;
