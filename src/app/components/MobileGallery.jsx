@@ -345,6 +345,8 @@ export default function DesktopGallery() {
                     if (gridedRef.current){
                       Grid(); 
                       closeModal();
+                       btnGridRef.current.classList.remove("activeBtn");
+                        btnShuffleRef.current.classList.add("activeBtn");
                     }
                     else shuffle();
                   }}

@@ -405,6 +405,8 @@ export default function DesktopGallery() {
               if (gridedRef.current)
                 Grid(); 
               else shuffle();
+               btnGridRef.current.classList.remove("activeBtn");
+                    btnShuffleRef.current.classList.add("activeBtn");
             }}
           >
             <div className="absolute top-[-65%] right-[-10%] w-full"><MemoryForm/></div>
