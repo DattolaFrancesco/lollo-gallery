@@ -164,6 +164,16 @@ export default function DesktopGallery() {
     const descriptions = document.querySelectorAll(".photo-description");
   descriptions.forEach(el => el.classList.toggle("text-white"));
   }
+  // the body classes survive the Switcher remount on resize, so align the UI to them
+  useEffect(() => {
+    const light = !document.body.classList.contains("bg-black");
+    BlackStarRef.current.classList.toggle("scale-[2.5]", !light);
+    WhiteStarRef.current.classList.toggle("scale-[2.5]", light);
+    infoRef.current.classList.toggle("text-white", !light);
+    document.querySelectorAll(".photo-description").forEach(el => el.classList.toggle("text-white", !light));
+    // grid always starts off after a remount
+    document.body.classList.remove("overflow-x-hidden");
+  }, []);
   const randomNumber = () => {
     const zone = Math.random();
 
@@ -439,7 +449,7 @@ export default function DesktopGallery() {
         <p>DEVELOPED BY FRANCESCO DATTOLA</p>
         </a>
          <a target="blank"  href="https://www.instagram.com/lollochef_/">
-        <p>SHOT BY LORENZO ACCORDI</p>
+        <p>SHOT BY LORENZO ACCORTI</p>
         </a>
         </div>
       </div>

@@ -139,6 +139,10 @@ export default function DesktopGallery() {
   const lastClickedDescriptionRef = useRef(null);
   // modal img active that can mount the component every time that change
   const [activeImage, setActiveImage] = useState(0);
+  // grid always starts off after a remount, clear what the other gallery left on the body
+  useEffect(() => {
+    document.body.classList.remove("overflow-x-hidden");
+  }, []);
   const randomNumber = () => {
      const zone = Math.random();
 
@@ -378,7 +382,7 @@ export default function DesktopGallery() {
               {/* fine shuffle  */}
               <div r className="absolute text-nowrap justify-center flex h-full flex-col  top-[130%] text-white text-[9px]">
               <p className="flex gap-1 tracking-widest"><span> <a target="blank"  href="https://www.instagram.com/lollochef_/">
-              <p>SHOT BY LORENZO ACCORDI</p>
+              <p>SHOT BY LORENZO ACCORTI</p>
               </a></span><span> <a target="blank" href="https://www.instagram.com/francescodattola_/">
               <p>DEVELOPED BY FRANCESCO DATTOLA</p>
               </a></span></p>
